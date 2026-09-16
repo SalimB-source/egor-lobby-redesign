@@ -209,8 +209,9 @@ export default function Home() {
           </div>
         </nav>
 
-        {/* Top Right Action Buttons: Search, Log in, Register */}
-        <div className="top-actions">
+        {/* Top Right Action Buttons: Search, Log in, Register
+            (hidden on mobile while the drawer is open — the drawer has its own set) */}
+        <div className={mobileOpen ? "top-actions top-actions--menu-open" : "top-actions"}>
           {/* Search Button */}
           <button
             className="top-search-btn"
