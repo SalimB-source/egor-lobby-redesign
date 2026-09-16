@@ -604,9 +604,10 @@
 }
 .egor-official-link:hover{color:var(--lime)}
 
-/* Mobile nav actions */
+/* Mobile nav actions — hidden on desktop, they only belong to the mobile drawer
+   (otherwise Search / Log in / Register appear twice in the topbar) */
 .mobile-nav-actions{
-  display:flex;
+  display:none;
   flex-direction:column;
   gap:10px;
   margin-top:16px;
@@ -663,6 +664,13 @@
   .top-search-btn{padding:0 10px;width:36px;justify-content:center}
   .top-login-btn{padding:0 12px;font-size:10px}
   .top-register-btn{padding:0 14px;font-size:10px}
+
+  /* Mobile drawer owns the Search / Log in / Register set */
+  .main-nav--open .mobile-nav-actions{display:flex}
+  /* ...so hide the topbar duplicates while the drawer is open (one set at a time) */
+  .top-actions--menu-open .top-search-btn,
+  .top-actions--menu-open .top-login-btn,
+  .top-actions--menu-open .top-register-btn{display:none}
 }
 @media(max-width:480px){
   .top-login-btn{display:none}
