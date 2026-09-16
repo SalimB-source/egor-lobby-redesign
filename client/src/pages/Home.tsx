@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, type CSSProperties } from "react";
 import {
   ArrowRight,
   Bell,
@@ -84,7 +84,7 @@ export default function Home() {
     </header>
 
     <main id="top">
-      <section className="hero-section">
+      <section className="hero-section" style={{ "--hero-image": `url(${import.meta.env.BASE_URL}egor-lobby-hero-red.jpg)` } as CSSProperties}>
         <div className="hero-image" />
         <div className="hero-grid" />
         <div className="hero-content container">
