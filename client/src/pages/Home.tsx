@@ -26,20 +26,33 @@ import {
 import { SearchDialog, type SearchItem } from "@/components/SearchDialog";
 import { LoginModal, RegisterModal, type UserProfile } from "@/components/AuthModals";
 
-const games = [
-  { name: "Free Fire", short: "FF", tone: "lime", players: "12.8k", icon: "◈" },
-  { name: "PUBG Mobile", short: "PUBG", tone: "blue", players: "8.4k", icon: "▦" },
-  { name: "Mobile Legends", short: "ML", tone: "violet", players: "6.2k", icon: "✦" },
-  { name: "Call of Duty", short: "COD", tone: "orange", players: "4.9k", icon: "⌁" },
-  { name: "Clash Royale", short: "CR", tone: "red", players: "3.1k", icon: "♜" },
-  { name: "Counter-Strike 2", short: "CS2", tone: "cyan", players: "2.7k", icon: "⊙" },
+export interface GameItem {
+  name: string;
+  short: string;
+  tone: string;
+  players: string;
+  icon: string;
+  image: string;
+  genre: string;
+}
+
+const games: GameItem[] = [
+  { name: "Free Fire", short: "FF", tone: "lime", players: "12.8k", icon: "◈", image: "games/free-fire.jpg", genre: "Battle Royale" },
+  { name: "PUBG Mobile", short: "PUBG", tone: "blue", players: "8.4k", icon: "▦", image: "games/pubg-mobile.jpg", genre: "Battle Royale" },
+  { name: "Mobile Legends", short: "ML", tone: "violet", players: "6.2k", icon: "✦", image: "games/mobile-legends.jpg", genre: "MOBA 5v5" },
+  { name: "Call of Duty", short: "COD", tone: "orange", players: "4.9k", icon: "⌁", image: "games/call-of-duty.jpg", genre: "Tactical FPS" },
+  { name: "Clash Royale", short: "CR", tone: "red", players: "3.1k", icon: "♜", image: "games/clash-royale.jpg", genre: "Tower Strategy" },
+  { name: "Counter-Strike 2", short: "CS2", tone: "cyan", players: "2.7k", icon: "⊙", image: "games/counter-strike-2.jpg", genre: "Competitive FPS" },
 ];
 
 const tournaments = [
   { title: "بطولة للاستمتاع فقط", game: "Free Fire", status: "START SOON", date: "17 MAR 2026", teams: "01 / 40", prize: "0 DZD", tone: "lime", icon: "◈" },
   { title: "Killerdrk", game: "PUBG Mobile", status: "START SOON", date: "17 MAR 2026", teams: "00 / 200", prize: "0 DZD", tone: "blue", icon: "▦" },
   { title: "Amja Championship", game: "Free Fire", status: "START SOON", date: "05 AUG 2026", teams: "00 / 90", prize: "1,000 DZD", tone: "lime", icon: "◈" },
-  { title: "COD MOB", game: "Call of Duty Mobile", status: "FULL", date: "13 AUG 2026", teams: "32 / 32", prize: "0 DZD", tone: "orange", icon: "⌁" },
+  { title: "COD MOB", game: "Call of Duty", status: "FULL", date: "13 AUG 2026", teams: "32 / 32", prize: "0 DZD", tone: "orange", icon: "⌁" },
+  { title: "MLBB DZ OPEN CUP", game: "Mobile Legends", status: "START SOON", date: "24 AUG 2026", teams: "16 / 32", prize: "25,000 DZD", tone: "violet", icon: "✦" },
+  { title: "ROYAL CROWN SERIES", game: "Clash Royale", status: "REGISTERING", date: "02 SEP 2026", teams: "48 / 64", prize: "15,000 DZD", tone: "red", icon: "♜" },
+  { title: "CS2 ALGIERS MASTERS", game: "Counter-Strike 2", status: "START SOON", date: "18 SEP 2026", teams: "08 / 16", prize: "50,000 DZD", tone: "cyan", icon: "⊙" },
 ];
 
 const arenas = [
@@ -62,8 +75,16 @@ function ActionButton({ children, onClick, variant = "primary", icon = true }: {
   return <button className={`action-button action-button--${variant}`} onClick={onClick}>{children}{icon && <ArrowRight size={15} />}</button>;
 }
 
-function SectionHeader({ eyebrow, title, count, action }: { eyebrow: string; title: string; count?: string; action?: string }) {
-  return <div className="section-header"><div><span className="eyebrow">{eyebrow}</span><h2>{title}{count && <small>{count}</small>}</h2></div>{action && <button className="text-link">{action}<ArrowRight size={15} /></button>}</div>;
+function SectionHeader({ eyebrow, title, count, action, onAction }: { eyebrow: string; title: string; count?: string; action?: string; onAction?: () => void }) {
+  return (
+    <div className="section-header">
+      <div>
+        <span className="eyebrow">{eyebrow}</span>
+        <h2>{title}{count && <small>{count}</small>}</h2>
+      </div>
+      {action && <button className="text-link" onClick={onAction}>{action}<ArrowRight size={15} /></button>}
+    </div>
+  );
 }
 
 export default function Home() {
@@ -80,7 +101,16 @@ export default function Home() {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [profileOpen, setProfileOpen] = useState(false);
 
-  const filteredTournaments = useMemo(() => gameFilter === "All games" ? tournaments : tournaments.filter((item) => item.game === gameFilter), [gameFilter]);
+  const filteredTournaments = useMemo(() => {
+    if (gameFilter === "All games") return tournaments;
+    return tournaments.filter(
+      item =>
+        item.game === gameFilter ||
+        (gameFilter === "Call of Duty" && item.game.toLowerCase().includes("call of duty")) ||
+        (gameFilter === "Free Fire" && item.game.toLowerCase().includes("free fire")) ||
+        (gameFilter === "PUBG Mobile" && item.game.toLowerCase().includes("pubg"))
+    );
+  }, [gameFilter]);
   const notify = (message: string) => { setNotice(message); window.setTimeout(() => setNotice(""), 2600); };
 
   // Listen to global shortcut (Cmd+K / Ctrl+K) for search
@@ -363,27 +393,73 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="section container game-section">
-          <SectionHeader eyebrow="02 / SELECT YOUR LOADOUT" title="GAMES" count="16 TOTAL" action="See all games" />
+        <section className="section container game-section" id="games">
+          <SectionHeader
+            eyebrow="02 / SELECT YOUR LOADOUT"
+            title="GAMES"
+            count="16 TOTAL"
+            action={gameFilter !== "All games" ? "Show all games" : "See all games"}
+            onAction={() => {
+              setGameFilter("All games");
+              notify("Showing all matches");
+            }}
+          />
           <div className="game-grid">
-            {games.map((game) => (
-              <button
-                key={game.name}
-                className={`game-card game-card--${game.tone}`}
-                onClick={() => {
-                  setGameFilter(game.name);
-                  document.getElementById("tournaments")?.scrollIntoView({ behavior: "smooth" });
-                }}
-              >
-                <span className="game-glow" />
-                <span className="game-icon">{game.icon}</span>
-                <span className="game-info">
-                  <strong>{game.name}</strong>
-                  <small><i /> {game.players} active</small>
-                </span>
-                <span className="game-arrow"><ArrowRight size={16} /></span>
-              </button>
-            ))}
+            {games.map(game => {
+              const isSelected = gameFilter === game.name;
+              return (
+                <button
+                  key={game.name}
+                  className={`game-card game-card--${game.tone} ${isSelected ? "game-card--selected" : ""}`}
+                  onClick={() => {
+                    if (isSelected) {
+                      setGameFilter("All games");
+                      notify("Cleared game filter");
+                    } else {
+                      setGameFilter(game.name);
+                      document.getElementById("tournaments")?.scrollIntoView({ behavior: "smooth" });
+                      notify(`Filtered matches for ${game.name}`);
+                    }
+                  }}
+                  aria-pressed={isSelected}
+                  title={`Select ${game.name} to view matches`}
+                >
+                  {/* Vertical thumbnail with official game artwork */}
+                  <div className="game-card-media">
+                    <img
+                      src={`${import.meta.env.BASE_URL}${game.image}`}
+                      alt={`${game.name} official artwork`}
+                      className="game-card-thumb"
+                      loading="lazy"
+                    />
+                    <div className="game-card-overlay" />
+                    <span className="game-glow" />
+                  </div>
+
+                  {/* Card top badges */}
+                  <div className="game-card-top">
+                    <span className="game-tag-badge">{game.short}</span>
+                    <span className="game-live-badge">
+                      <span className="game-live-dot" />
+                      <span>{game.players}</span>
+                    </span>
+                  </div>
+
+                  {/* Card bottom details */}
+                  <div className="game-card-bottom">
+                    <span className="game-card-genre">{game.genre}</span>
+                    <strong className="game-card-title">{game.name}</strong>
+                    <div className="game-card-action">
+                      <span>{isSelected ? "FILTERED" : "VIEW MATCHES"}</span>
+                      <ArrowRight size={13} className="game-card-arrow" />
+                    </div>
+                  </div>
+
+                  {/* Selected / Active Filter Pill */}
+                  {isSelected && <span className="game-card-active-pill">ACTIVE</span>}
+                </button>
+              );
+            })}
           </div>
         </section>
 
