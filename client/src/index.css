@@ -175,6 +175,10 @@ a {
   height: 34px;
   max-width: 148px;
 }
+.brand-logo-img--lg {
+  height: 58px;
+  max-width: 200px;
+}
 .brand-logo-img--sm {
   height: 20px;
   max-width: 96px;
@@ -1279,6 +1283,9 @@ a {
   .topbar {
     height: 68px;
     padding-inline: 18px;
+  }
+  .brand-logo-img--lg {
+    height: 46px;
   }
   .main-nav {
     display: none;

@@ -34,14 +34,14 @@ function assetUrl(path: string): string {
   return `${import.meta.env.BASE_URL}${path.replace(/^\/+/, "")}`;
 }
 
-export type BrandMarkSize = "sm" | "md";
+export type BrandMarkSize = "sm" | "md" | "lg";
 
 interface BrandMarkProps {
   size?: BrandMarkSize;
   className?: string;
 }
 
-/** The EGOR symbol on its own — 34px in the top bar / footer, 20px in modals. */
+/** The EGOR symbol on its own — 58px in the top bar, 34px default, 20px in modals. */
 export function BrandMark({ size = "md", className }: BrandMarkProps) {
   const [failed, setFailed] = useState(false);
 
