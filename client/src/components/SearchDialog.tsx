@@ -19,15 +19,40 @@ export interface SearchItem {
   badge?: string;
   tag?: string;
   tone?: string;
+  image?: string;
 }
 
 interface SearchDialogProps {
   isOpen: boolean;
   onClose: () => void;
   onSelect: (item: SearchItem) => void;
-  games: Array<{ name: string; short: string; tone: string; players: string; icon: string }>;
-  tournaments: Array<{ title: string; game: string; status: string; date: string; teams: string; prize: string; tone: string; icon: string }>;
-  arenas: Array<{ name: string; tag: string; members: string; desc: string; tone: string; mark: string }>;
+  games: Array<{
+    name: string;
+    short: string;
+    tone: string;
+    players: string;
+    icon: string;
+    image?: string;
+    genre?: string;
+  }>;
+  tournaments: Array<{
+    title: string;
+    game: string;
+    status: string;
+    date: string;
+    teams: string;
+    prize: string;
+    tone: string;
+    icon: string;
+  }>;
+  arenas: Array<{
+    name: string;
+    tag: string;
+    members: string;
+    desc: string;
+    tone: string;
+    mark: string;
+  }>;
 }
 
 export function SearchDialog({
@@ -69,20 +94,21 @@ export function SearchDialog({
     const list: SearchItem[] = [];
 
     // Games
-    games.forEach((g) => {
+    games.forEach(g => {
       list.push({
         id: `game-${g.name}`,
         type: "game",
         title: g.name,
         subtitle: `${g.players} active competitors`,
         badge: g.short,
-        tag: "Game Loadout",
+        tag: g.genre || "Game Loadout",
         tone: g.tone,
+        image: g.image,
       });
     });
 
     // Tournaments
-    tournaments.forEach((t) => {
+    tournaments.forEach(t => {
       list.push({
         id: `tournament-${t.title}`,
         type: "tournament",
@@ -115,7 +141,7 @@ export function SearchDialog({
     });
 
     // Arenas
-    arenas.forEach((a) => {
+    arenas.forEach(a => {
       list.push({
         id: `arena-${a.name}`,
         type: "arena",
@@ -134,12 +160,12 @@ export function SearchDialog({
   const filtered = useMemo(() => {
     let result = allItems;
     if (filterType !== "all") {
-      result = result.filter((item) => item.type === filterType);
+      result = result.filter(item => item.type === filterType);
     }
     if (query.trim()) {
       const q = query.toLowerCase().trim();
       result = result.filter(
-        (item) =>
+        item =>
           item.title.toLowerCase().includes(q) ||
           item.subtitle.toLowerCase().includes(q) ||
           item.tag?.toLowerCase().includes(q)
@@ -153,7 +179,7 @@ export function SearchDialog({
   return (
     <div
       className="egor-modal-backdrop"
-      onClick={(e) => {
+      onClick={e => {
         if (e.target === e.currentTarget) onClose();
       }}
       role="dialog"
@@ -170,7 +196,7 @@ export function SearchDialog({
             className="egor-search-input"
             placeholder="Search tournaments, games, scrims, arenas..."
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={e => setQuery(e.target.value)}
           />
           {query ? (
             <button
@@ -186,7 +212,11 @@ export function SearchDialog({
           ) : (
             <span className="egor-search-hint">ESC to close</span>
           )}
-          <button className="egor-modal-close-btn" onClick={onClose} aria-label="Close dialog">
+          <button
+            className="egor-modal-close-btn"
+            onClick={onClose}
+            aria-label="Close dialog"
+          >
             <X size={18} />
           </button>
         </div>
@@ -199,7 +229,7 @@ export function SearchDialog({
             { id: "scrim", label: "Scrims", icon: Swords },
             { id: "game", label: "Games", icon: Gamepad2 },
             { id: "arena", label: "Arenas", icon: Users },
-          ].map((cat) => {
+          ].map(cat => {
             const Icon = cat.icon;
             return (
               <button
@@ -220,7 +250,10 @@ export function SearchDialog({
             <div className="egor-search-empty">
               <Crosshair size={32} className="opacity-30 mb-2" />
               <p>No results found for &ldquo;{query}&rdquo;</p>
-              <small>Try searching &ldquo;Free Fire&rdquo;, &ldquo;PUBG&rdquo;, or &ldquo;Amja&rdquo;</small>
+              <small>
+                Try searching &ldquo;Free Fire&rdquo;, &ldquo;PUBG&rdquo;, or
+                &ldquo;Amja&rdquo;
+              </small>
             </div>
           ) : (
             <div className="egor-search-list">
@@ -228,7 +261,7 @@ export function SearchDialog({
                 <span>{filtered.length} RESULTS</span>
                 <span className="text-muted">SELECT TO NAVIGATE</span>
               </div>
-              {filtered.map((item) => (
+              {filtered.map(item => (
                 <button
                   key={item.id}
                   className={`egor-search-row egor-search-row--${item.tone || "lime"}`}
@@ -238,7 +271,18 @@ export function SearchDialog({
                   }}
                 >
                   <div className="egor-search-row-lead">
-                    <span className="egor-search-badge">{item.badge || "•"}</span>
+                    {item.image ? (
+                      <img
+                        src={`${import.meta.env.BASE_URL}${item.image}`}
+                        alt={item.title}
+                        className="egor-search-thumb"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <span className="egor-search-badge">
+                        {item.badge || "•"}
+                      </span>
+                    )}
                     <div>
                       <div className="egor-search-row-title">
                         <strong>{item.title}</strong>
