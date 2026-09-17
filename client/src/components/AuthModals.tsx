@@ -14,6 +14,7 @@ import {
   X,
   Zap,
 } from "lucide-react";
+import { BrandMark } from "@/components/BrandLogo";
 
 export interface UserProfile {
   name: string;
@@ -114,7 +115,7 @@ export function LoginModal({
         {/* Top bar with close */}
         <div className="egor-auth-top">
           <div className="egor-auth-badge">
-            <span className="brand-mark sm"><span /></span>
+            <BrandMark size="sm" />
             <span>EGOR // HUB_STATION</span>
           </div>
           <button className="egor-modal-close-btn" onClick={onClose} aria-label="Close dialog">
@@ -373,7 +374,7 @@ export function RegisterModal({
         {/* Top bar with close */}
         <div className="egor-auth-top">
           <div className="egor-auth-badge">
-            <span className="brand-mark sm"><span /></span>
+            <BrandMark size="sm" />
             <span>EGOR // ESTABLISH_IDENTITY</span>
           </div>
           <button className="egor-modal-close-btn" onClick={onClose} aria-label="Close dialog">
