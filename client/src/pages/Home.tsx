@@ -24,6 +24,7 @@ import {
   Zap,
 } from "lucide-react";
 import { SearchDialog, type SearchItem } from "@/components/SearchDialog";
+import { BrandLockup } from "@/components/BrandLogo";
 import {
   LoginModal,
   RegisterModal,
@@ -484,12 +485,7 @@ export default function Home() {
       <header className="topbar">
         {/* Brand Logo */}
         <a className="brand" href="#top" onClick={() => setActiveNav("Lobby")}>
-          <span className="brand-mark">
-            <span />
-          </span>
-          <span className="brand-word">
-            EGOR<small>GAMING</small>
-          </span>
+          <BrandLockup />
         </a>
 
         {/* Center Navigation Links */}
@@ -1266,12 +1262,7 @@ export default function Home() {
         <div className="container footer-inner">
           <div className="footer-brand">
             <a className="brand" href="#top">
-              <span className="brand-mark">
-                <span />
-              </span>
-              <span className="brand-word">
-                EGOR<small>GAMING</small>
-              </span>
+              <BrandLockup />
             </a>
             <p>
               Built for competitive gamers

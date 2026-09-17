@@ -158,6 +158,34 @@ a {
   color: var(--cyan);
   margin-top: 6px;
 }
+/* Image-based logo (drop the asset in client/public and set LOGO_MARK_SRC /
+   LOGO_LOCKUP_SRC in client/src/components/BrandLogo.tsx) */
+.brand-lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.brand-logo-img {
+  display: block;
+  width: auto;
+  object-fit: contain;
+  flex: none;
+}
+.brand-logo-img--md {
+  height: 34px;
+  max-width: 148px;
+}
+.brand-logo-img--sm {
+  height: 20px;
+  max-width: 96px;
+}
+.brand-logo-lockup {
+  display: block;
+  height: 38px;
+  width: auto;
+  max-width: 210px;
+  object-fit: contain;
+}
 .main-nav {
   display: flex;
   align-items: center;
