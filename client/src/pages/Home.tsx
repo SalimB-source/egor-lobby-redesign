@@ -24,7 +24,7 @@ import {
   Zap,
 } from "lucide-react";
 import { SearchDialog, type SearchItem } from "@/components/SearchDialog";
-import { BrandLockup } from "@/components/BrandLogo";
+import { BrandLockup, BrandMark } from "@/components/BrandLogo";
 import {
   LoginModal,
   RegisterModal,
@@ -483,9 +483,9 @@ export default function Home() {
   return (
     <div className="app-shell">
       <header className="topbar">
-        {/* Brand Logo */}
+        {/* Brand Logo — symbol only, no wordmark */}
         <a className="brand" href="#top" onClick={() => setActiveNav("Lobby")}>
-          <BrandLockup />
+          <BrandMark size="lg" />
         </a>
 
         {/* Center Navigation Links */}
