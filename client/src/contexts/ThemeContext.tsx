@@ -40,6 +40,11 @@ export function ThemeProvider({
     if (switchable) {
       localStorage.setItem("theme", theme);
     }
+
+    // Keep the browser chrome (mobile address bar, etc.) in sync.
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute("content", theme === "dark" ? "#080708" : "#f5f2f3");
   }, [theme, switchable]);
 
   const toggleTheme = switchable

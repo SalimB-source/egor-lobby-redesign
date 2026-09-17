@@ -13,8 +13,10 @@ import {
   LogOut,
   Map,
   Menu,
+  Moon,
   Radio,
   Search,
+  Sun,
   Shield,
   Sparkles,
   Swords,
@@ -25,6 +27,7 @@ import {
 } from "lucide-react";
 import { SearchDialog, type SearchItem } from "@/components/SearchDialog";
 import { BrandLockup, BrandMark } from "@/components/BrandLogo";
+import { useTheme } from "@/contexts/ThemeContext";
 import {
   LoginModal,
   RegisterModal,
@@ -390,6 +393,7 @@ export default function Home() {
   const [registerOpen, setRegisterOpen] = useState(false);
   const [user, setUser] = useState<UserProfile | null>(null);
   const [profileOpen, setProfileOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   const filteredMatches = useMemo(() => {
     const list = mode === "tournaments" ? tournaments : scrims;
@@ -569,6 +573,18 @@ export default function Home() {
             mobileOpen ? "top-actions top-actions--menu-open" : "top-actions"
           }
         >
+          {/* Light / Dark Theme Toggle */}
+          <button
+            className="top-theme-btn"
+            onClick={toggleTheme}
+            aria-label={
+              theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+            }
+            title={theme === "dark" ? "Light mode" : "Dark mode"}
+          >
+            {theme === "dark" ? <Sun size={15} /> : <Moon size={15} />}
+          </button>
+
           {/* Search Button */}
           <button
             className="top-search-btn"
