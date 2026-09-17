@@ -1129,6 +1129,16 @@ export default function Home() {
         </section>
 
         <section className="organizer-section">
+          {/* Full-bleed tournament arena hero image */}
+          <div className="organizer-bg" aria-hidden="true">
+            <img
+              src={`${import.meta.env.BASE_URL}organizer-arena-hero.jpg`}
+              alt=""
+              className="organizer-bg-img"
+              loading="lazy"
+            />
+            <div className="organizer-bg-overlay" />
+          </div>
           <div className="container organizer-grid">
             <div className="organizer-art">
               <div className="radar">
