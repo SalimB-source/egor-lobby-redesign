@@ -16,7 +16,7 @@ import type { ReactNode } from "react";
  * While these are `null`, the original CSS-drawn geometric mark is rendered so the
  * site never shows a broken image.
  */
-export const LOGO_MARK_SRC: string | null = null;
+export const LOGO_MARK_SRC: string | null = "/egor-logo.svg";
 export const LOGO_LOCKUP_SRC: string | null = null;
 export const LOGO_ALT = "EGOR Gaming";
 
