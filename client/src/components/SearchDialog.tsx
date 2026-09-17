@@ -109,6 +109,9 @@ export function SearchDialog({
 
     // Tournaments
     tournaments.forEach(t => {
+      const g = games.find(
+        game => game.name.toLowerCase() === t.game.toLowerCase()
+      );
       list.push({
         id: `tournament-${t.title}`,
         type: "tournament",
@@ -117,6 +120,7 @@ export function SearchDialog({
         badge: t.status,
         tag: "Tournament",
         tone: t.tone,
+        image: g?.image,
       });
     });
 
@@ -128,16 +132,18 @@ export function SearchDialog({
       subtitle: "Free Fire · The Refuge Academy · 12/15 Teams",
       badge: "FEATURED",
       tag: "Scrim",
-      tone: "blue",
+      tone: "lime",
+      image: games.find(g => g.name === "Free Fire")?.image,
     });
     list.push({
       id: "scrim-refuge-2",
       type: "scrim",
       title: "REFUGE DZ TRNG D-4",
-      subtitle: "Free Fire · 16 / 09 / 2026 · 14/15 Teams",
-      badge: "START SOON",
+      subtitle: "PUBG Mobile · 18 / 03 / 2026 · 18/20 Teams",
+      badge: "LIVE NOW",
       tag: "Scrim",
-      tone: "lime",
+      tone: "blue",
+      image: games.find(g => g.name === "PUBG Mobile")?.image,
     });
 
     // Arenas
