@@ -3,6 +3,30 @@
 @import "tw-animate-css";
 
 :root {
+  color-scheme: light;
+  --bg: #f5f2f3;
+  --surface: #ffffff;
+  --surface-2: #efe9ec;
+  --surface-3: #e3dadd;
+  --ink: #1a1417;
+  --muted: #5b5356;
+  --dim: #7c6f73;
+  --line: rgba(26, 20, 23, 0.13);
+  --line-strong: rgba(26, 20, 23, 0.3);
+  --lime: #d61f2b;
+  --cyan: #4e6567;
+  --violet: #a13a45;
+  --orange: #bf4f34;
+  --danger: #d61f57;
+  --display: "Barlow Condensed", sans-serif;
+  --body: "Space Grotesk", sans-serif;
+  --mono: "DM Mono", monospace;
+  --ease: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Dark theme — applied when <html> carries the .dark class. */
+html.dark {
+  color-scheme: dark;
   --bg: #080708;
   --surface: #120d0f;
   --surface-2: #1a1114;
@@ -17,10 +41,6 @@
   --violet: #b94c58;
   --orange: #e16a55;
   --danger: #ff5c7c;
-  --display: "Barlow Condensed", sans-serif;
-  --body: "Space Grotesk", sans-serif;
-  --mono: "DM Mono", monospace;
-  --ease: cubic-bezier(0.23, 1, 0.32, 1);
 }
 * {
   box-sizing: border-box;
@@ -2594,8 +2614,8 @@ a {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 8px var(--accent);
+  background: var(--accent-on-dark, var(--accent));
+  box-shadow: 0 0 8px var(--accent-on-dark, var(--accent));
   animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
@@ -3229,4 +3249,406 @@ a {
   .stadium-chip-title {
     font-size: 12px;
   }
+}
+
+/* ==========================================================================
+   LIGHT THEME
+   Applied whenever <html> does NOT carry the .dark class (the default).
+   Every color choice below targets WCAG AA contrast (4.5:1+) for text.
+   Photographic sections (hero, organizer) intentionally keep their dark
+   imagery so overlaid text stays readable — only their text colors are
+   pinned to light values.
+   ========================================================================== */
+
+/* ---- Per-game tone accents: darkened for text on light surfaces, while
+   --accent-on-dark keeps the vivid variant for badges over dark photos. ---- */
+html:not(.dark)
+  :is(
+    .game-card--lime,
+    .tournament-card--lime,
+    .stadium-chip--lime,
+    .arena-card--lime,
+    .egor-search-row--lime
+  ) {
+  --accent: #15803d;
+  --accent-on-dark: #22c55e;
+  --accent-glow: rgba(21, 128, 61, 0.35);
+}
+html:not(.dark)
+  :is(
+    .game-card--blue,
+    .tournament-card--blue,
+    .stadium-chip--blue,
+    .arena-card--blue,
+    .egor-search-row--blue
+  ) {
+  --accent: #0e7490;
+  --accent-on-dark: #06b6d4;
+  --accent-glow: rgba(14, 116, 144, 0.35);
+}
+html:not(.dark)
+  :is(
+    .game-card--violet,
+    .tournament-card--violet,
+    .stadium-chip--violet,
+    .arena-card--violet,
+    .egor-search-row--violet
+  ) {
+  --accent: #7e22ce;
+  --accent-on-dark: #a855f7;
+  --accent-glow: rgba(126, 34, 206, 0.35);
+}
+html:not(.dark)
+  :is(
+    .game-card--orange,
+    .tournament-card--orange,
+    .stadium-chip--orange,
+    .arena-card--orange,
+    .egor-search-row--orange
+  ) {
+  --accent: #b8450c;
+  --accent-on-dark: #f97316;
+  --accent-glow: rgba(184, 69, 12, 0.35);
+}
+html:not(.dark)
+  :is(
+    .game-card--red,
+    .tournament-card--red,
+    .stadium-chip--red,
+    .egor-search-row--red
+  ) {
+  --accent: #b91c1c;
+  --accent-on-dark: #ef4444;
+  --accent-glow: rgba(185, 28, 28, 0.35);
+}
+html:not(.dark)
+  :is(
+    .game-card--cyan,
+    .tournament-card--cyan,
+    .stadium-chip--cyan,
+    .egor-search-row--cyan
+  ) {
+  --accent: #0369a1;
+  --accent-on-dark: #38bdf8;
+  --accent-glow: rgba(3, 105, 161, 0.35);
+}
+
+/* ---- Global film grain / vignette: soften for light backgrounds ---- */
+html:not(.dark) body:before {
+  background: linear-gradient(rgba(26, 20, 23, 0.05) 1px, transparent 1px);
+  opacity: 0.35;
+}
+html:not(.dark) body:after {
+  background: radial-gradient(
+    ellipse at center,
+    transparent 55%,
+    rgba(26, 20, 23, 0.1) 100%
+  );
+}
+
+/* ---- Selection & keyboard focus ---- */
+::selection {
+  background: rgba(214, 31, 43, 0.92);
+  color: #fff;
+}
+html.dark ::selection {
+  background: #ff3b3b;
+  color: #0a110e;
+}
+:focus-visible {
+  outline: 2px solid var(--lime);
+  outline-offset: 2px;
+}
+
+/* ---- Top bar ---- */
+html:not(.dark) .topbar {
+  background: rgba(255, 255, 255, 0.88);
+  border-bottom-color: var(--line);
+}
+html:not(.dark) .brand-logo-img {
+  filter: drop-shadow(0 1px 1px rgba(26, 20, 23, 0.28));
+}
+html:not(.dark) .top-search-btn,
+html:not(.dark) .top-theme-btn {
+  background: rgba(26, 20, 23, 0.045);
+}
+html:not(.dark) .top-search-btn:hover,
+html:not(.dark) .top-theme-btn:hover {
+  background: rgba(26, 20, 23, 0.08);
+}
+html:not(.dark) .top-search-kbd {
+  background: rgba(26, 20, 23, 0.06);
+}
+html:not(.dark) .top-login-btn:hover {
+  background: rgba(214, 31, 43, 0.07);
+  box-shadow: 0 0 14px rgba(214, 31, 43, 0.15);
+}
+html:not(.dark) .top-register-btn,
+html:not(.dark) .mobile-register-btn {
+  color: #fff;
+}
+html:not(.dark) .top-register-btn:hover {
+  box-shadow: 0 8px 24px -6px rgba(214, 31, 43, 0.55);
+}
+html:not(.dark) .avatar {
+  color: #fff;
+  background: linear-gradient(135deg, var(--lime), #7a1420);
+}
+html:not(.dark) .profile-dropdown {
+  box-shadow: 0 20px 40px rgba(26, 20, 23, 0.22);
+}
+html:not(.dark) .profile-dropdown-stats {
+  background: rgba(26, 20, 23, 0.04);
+}
+html:not(.dark) .profile-logout-btn {
+  background: rgba(214, 31, 43, 0.08);
+  border-color: rgba(214, 31, 43, 0.35);
+}
+html:not(.dark) .profile-logout-btn:hover {
+  color: #fff;
+}
+html:not(.dark) .mobile-search-btn {
+  background: rgba(26, 20, 23, 0.05);
+}
+@media (max-width: 760px) {
+  html:not(.dark) .main-nav {
+    background: rgba(255, 255, 255, 0.98);
+  }
+}
+
+/* ---- Theme toggle button (both themes) ---- */
+.top-theme-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  transition: all 0.2s var(--ease);
+}
+.top-theme-btn:hover {
+  color: var(--lime);
+  border-color: var(--lime);
+}
+
+/* ---- Buttons ---- */
+html:not(.dark) .action-button {
+  color: #fff;
+}
+html:not(.dark) .action-button:hover {
+  box-shadow: 0 14px 30px -12px rgba(214, 31, 43, 0.55);
+}
+html:not(.dark) .action-button--ghost {
+  border-color: rgba(214, 31, 43, 0.5);
+}
+html:not(.dark) .play-button:hover {
+  color: #fff;
+}
+
+/* ---- Hero: dark photo stays, text pinned to light values ---- */
+html:not(.dark) .hero-kicker {
+  color: #b3aaad;
+}
+html:not(.dark) .hero-kicker .status-dot {
+  background: #ff3b3b;
+  box-shadow:
+    0 0 0 4px rgba(255, 59, 59, 0.12),
+    0 0 14px rgba(255, 59, 59, 0.8);
+}
+html:not(.dark) .kicker-line {
+  background: #c7bfc1;
+}
+html:not(.dark) .hero-index {
+  color: #ff5c5c;
+}
+html:not(.dark) .hero-copy h1 {
+  color: #f4f1f1;
+}
+html:not(.dark) .hero-copy h1 em {
+  color: #ff5252;
+  text-shadow: 0 0 30px rgba(255, 59, 59, 0.35);
+}
+html:not(.dark) .hero-secondary {
+  color: #f4f1f1;
+}
+html:not(.dark) .hero-secondary:hover {
+  color: #ff6b6b;
+}
+html:not(.dark) .play-orb {
+  border-color: #c7bfc1;
+  color: #c7bfc1;
+}
+html:not(.dark) .hero-readout span {
+  color: #a49a9d;
+}
+html:not(.dark) .hero-readout strong {
+  color: #f4f1f1;
+}
+html:not(.dark) .hero-readout small {
+  color: #ff6b6b;
+}
+html:not(.dark) .hero-scroll {
+  color: #a49a9d;
+}
+html:not(.dark) .hero-scroll div {
+  background: linear-gradient(#ff5252, transparent);
+}
+
+/* ---- Game cards: labels over the dark thumbnail gradient stay light ---- */
+html:not(.dark) .game-card-action,
+html:not(.dark) .game-card-arrow {
+  color: #c9c2c4;
+}
+html:not(.dark) .game-card-active-pill {
+  background: var(--accent-on-dark, var(--accent));
+}
+html:not(.dark) .game-card {
+  box-shadow: 0 12px 26px -12px rgba(26, 20, 23, 0.45);
+}
+html:not(.dark) .game-card:hover {
+  box-shadow:
+    0 20px 42px -14px rgba(26, 20, 23, 0.5),
+    0 0 24px -6px var(--accent-glow);
+}
+html:not(.dark) .game-card--selected {
+  box-shadow:
+    0 0 0 2px var(--accent),
+    0 20px 40px -12px rgba(26, 20, 23, 0.5),
+    0 0 28px -4px var(--accent-glow);
+}
+
+/* ---- Stadium / tournament cards ---- */
+html:not(.dark) .tournament-card {
+  background: linear-gradient(105deg, #ffffff, #f3eef0);
+}
+html:not(.dark) .tournament-card:hover {
+  box-shadow:
+    0 10px 28px -12px rgba(26, 20, 23, 0.4),
+    -4px 0 20px -4px var(--accent-glow);
+}
+html:not(.dark) .tour-game:hover {
+  background: rgba(26, 20, 23, 0.05);
+}
+html:not(.dark) .stadium-clear-filter-btn {
+  background: rgba(214, 31, 43, 0.08);
+  border-color: rgba(214, 31, 43, 0.4);
+}
+html:not(.dark) .stadium-clear-filter-btn:hover {
+  color: #fff;
+}
+html:not(.dark) .stadium-game-chips {
+  scrollbar-color: rgba(214, 31, 43, 0.3) transparent;
+}
+html:not(.dark) .stadium-game-chips::-webkit-scrollbar-thumb {
+  background: rgba(214, 31, 43, 0.3);
+}
+html:not(.dark) .stadium-chip:hover {
+  box-shadow:
+    0 6px 16px -6px rgba(26, 20, 23, 0.45),
+    0 0 12px -3px var(--accent-glow);
+}
+html:not(.dark) .stadium-chip--active {
+  box-shadow:
+    0 6px 20px -6px rgba(26, 20, 23, 0.5),
+    0 0 18px -2px var(--accent-glow);
+}
+
+/* ---- Organizer: dark arena photo stays, text pinned to light values ---- */
+html:not(.dark) .organizer-copy .eyebrow {
+  color: #c7bfc1;
+}
+html:not(.dark) .organizer-copy h2 {
+  color: #f4f1f1;
+}
+html:not(.dark) .organizer-copy h2 em {
+  color: #ff5252;
+}
+html:not(.dark) .organizer-stats > span {
+  border-left-color: #c7bfc1;
+}
+html:not(.dark) .organizer-stats strong {
+  color: #f4f1f1;
+}
+html:not(.dark) .organizer-stats small {
+  color: #b3aaad;
+}
+html:not(.dark) .radar {
+  color: #d8d2d4;
+}
+html:not(.dark) .radar-label {
+  background: #24171b;
+  color: #c7bfc1;
+}
+
+/* ---- Arenas / store / footer ---- */
+html:not(.dark) .arena-footer button:hover {
+  color: #fff;
+}
+html:not(.dark) .footer {
+  background: var(--surface-2);
+}
+
+/* ---- Toast ---- */
+html:not(.dark) .toast {
+  border-color: rgba(214, 31, 43, 0.45);
+  box-shadow: 0 16px 35px -18px rgba(26, 20, 23, 0.4);
+}
+html:not(.dark) .toast .status-dot {
+  background: var(--lime);
+  box-shadow:
+    0 0 0 4px rgba(214, 31, 43, 0.12),
+    0 0 14px rgba(214, 31, 43, 0.7);
+}
+
+/* ---- Search modal ---- */
+html:not(.dark) .egor-modal-backdrop {
+  background: rgba(26, 20, 23, 0.55);
+}
+html:not(.dark) .egor-modal-close-btn:hover {
+  background: rgba(26, 20, 23, 0.06);
+}
+html:not(.dark) .egor-search-panel {
+  box-shadow:
+    0 30px 60px rgba(26, 20, 23, 0.28),
+    0 0 40px rgba(214, 31, 43, 0.08);
+}
+html:not(.dark) .egor-search-clear {
+  background: rgba(26, 20, 23, 0.08);
+}
+html:not(.dark) .egor-search-clear:hover {
+  background: rgba(26, 20, 23, 0.14);
+}
+html:not(.dark) .egor-search-filters {
+  background: rgba(26, 20, 23, 0.03);
+}
+html:not(.dark) .egor-search-row {
+  background: rgba(26, 20, 23, 0.02);
+}
+html:not(.dark) .egor-search-tag {
+  background: rgba(26, 20, 23, 0.05);
+}
+html:not(.dark) .egor-search-external-link {
+  border-color: rgba(214, 31, 43, 0.35);
+}
+
+/* ---- Auth modals ---- */
+html:not(.dark) .egor-auth-card {
+  box-shadow:
+    0 30px 70px rgba(26, 20, 23, 0.3),
+    0 0 50px rgba(214, 31, 43, 0.08);
+}
+html:not(.dark) .egor-input-wrapper:focus-within {
+  box-shadow: 0 0 0 2px rgba(214, 31, 43, 0.15);
+}
+html:not(.dark) .egor-auth-demo-btn {
+  background: rgba(26, 20, 23, 0.04);
+}
+html:not(.dark) .egor-auth-demo-btn:hover {
+  background: rgba(26, 20, 23, 0.07);
+}
+html:not(.dark) .egor-checkbox-label input:checked + .egor-custom-check {
+  background: rgba(214, 31, 43, 0.1);
 }
