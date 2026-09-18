@@ -310,6 +310,8 @@ export const getGameForItem = (gameName: string): GameItem => {
  */
 const arenas: {
   name: string;
+  /** Two-to-four letter code, used by the search dialog badge. */
+  short: string;
   platform: string;
   category: string;
   members: string;
@@ -325,6 +327,7 @@ const arenas: {
 }[] = [
   {
     name: "ALGERIAN ESPORTS FEDERATION",
+    short: "AEF",
     platform: "cross platform",
     category: "organizers",
     members: "2.4k",
@@ -335,6 +338,7 @@ const arenas: {
   },
   {
     name: "THE REFUGE ACADEMY",
+    short: "RA",
     platform: "cross platform",
     category: "esports club",
     members: "1.8k",
@@ -345,6 +349,7 @@ const arenas: {
   },
   {
     name: "MLBB ALGERIA",
+    short: "MLBB",
     platform: "mobile",
     category: "community",
     members: "1.1k",
@@ -354,6 +359,7 @@ const arenas: {
   },
   {
     name: "7OUMA ARENA",
+    short: "7A",
     platform: "mobile",
     category: "organizers",
     members: "980",

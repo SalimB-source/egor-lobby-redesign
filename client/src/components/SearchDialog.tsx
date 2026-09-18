@@ -47,6 +47,7 @@ interface SearchDialogProps {
   }>;
   arenas: Array<{
     name: string;
+    short: string;
     platform: string;
     category: string;
     members: string;
@@ -153,7 +154,7 @@ export function SearchDialog({
         type: "arena",
         title: a.name,
         subtitle: `${a.members} members · ${a.category}`,
-        badge: a.platform,
+        badge: a.short,
         tag: "Arena Hub",
         tone: a.tone,
       });

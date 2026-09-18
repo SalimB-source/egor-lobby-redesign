@@ -15,3 +15,5 @@ Errors are surfaced as ::error:: annotations (log blobs are blocked from the san
 Failure reasons are re-emitted as annotations, and partial reports are always committed.
 
 The repo is ESM, so the helper is a `.cjs` file (CommonJS + NODE_PATH).
+
+Search badge goes back to a short code (the platform label wrapped and collided).
