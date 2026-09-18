@@ -3874,23 +3874,22 @@ html:not(.dark) .egor-checkbox-label input:checked + .egor-custom-check {
 }
 
 /* ==========================================================================
-   Thin red corner accent — a slim red bracket hugging every card's top-left
-   corner edge: game cards, tournament cards, arena cards and gift cards
-   alike. Uses ::before, which none of the card types rely on (arena-card
-   keeps ::after for its hover border). --corner-accent tracks the brand red
-   in both themes via --lime (dark: #ff3b3b, light: #d61f2b). The bracket
-   sits at -1px so its 2px arms lie flush along (and cover) the card's own
-   1px top and left border; the 4px radius follows the gift card's corner,
-   while the game card's chamfered corner trims the bracket tip naturally.
+   Thin red corner accent — a slim red bracket hugging the top-left corner
+   edge of game cards, arena cards and gift cards. (Tournament cards in the
+   section 03 stadium intentionally opt out.) Uses ::before, which none of
+   the card types rely on (arena-card keeps ::after for its hover border).
+   --corner-accent tracks the brand red in both themes via --lime (dark:
+   #ff3b3b, light: #d61f2b). The bracket sits at -1px so its 2px arms lie
+   flush along (and cover) the card's own 1px top and left border; the 4px
+   radius follows the gift card's corner, while the game card's chamfered
+   corner trims the bracket tip naturally.
    ========================================================================== */
-.tournament-card,
 .gift-card {
   /* game-card and arena-card already establish a positioning context. */
   position: relative;
 }
 
 .game-card::before,
-.tournament-card::before,
 .arena-card::before,
 .gift-card::before {
   --corner-accent: var(--lime);
@@ -3912,7 +3911,6 @@ html:not(.dark) .egor-checkbox-label input:checked + .egor-custom-check {
 }
 
 .game-card:hover::before,
-.tournament-card:hover::before,
 .arena-card:hover::before,
 .gift-card:hover::before {
   opacity: 1;
