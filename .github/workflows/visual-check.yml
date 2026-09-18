@@ -1,0 +1,130 @@
+name: Visual check (arena section)
+
+on:
+  push:
+    paths:
+      - "tools/visual-check/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  shots:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build the site
+        run: pnpm run build
+
+      - name: Serve the built site
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/serve/egor-lobby-redesign
+          cp -r dist/public/. /tmp/serve/egor-lobby-redesign/
+          (cd /tmp/serve && nohup python3 -m http.server 4173 >/tmp/serve.log 2>&1 &)
+          sleep 3
+          curl -s -o /dev/null -w "index: HTTP %{http_code}\n" http://127.0.0.1:4173/egor-lobby-redesign/
+
+      - name: Install Playwright
+        run: |
+          mkdir -p /tmp/pw
+          cd /tmp/pw
+          npm init -y >/dev/null
+          npm i playwright@1.49.1 --no-audit --no-fund
+          npx playwright install --with-deps chromium
+
+      - name: Screenshot the arena section
+        run: |
+          set -euo pipefail
+          mkdir -p tools/visual-check/out
+          cat > /tmp/pw/shots.js <<'JS'
+          const { chromium } = require('playwright');
+          const fs = require('fs');
+
+          (async () => {
+            const browser = await chromium.launch();
+            for (const theme of ['dark', 'light']) {
+              const ctx = await browser.newContext({
+                viewport: { width: 1440, height: 1000 },
+                deviceScaleFactor: 2,
+              });
+              await ctx.addInitScript((t) => localStorage.setItem('theme', t), theme);
+              const page = await ctx.newPage();
+              page.on('console', (m) => {
+                if (m.type() === 'error') console.log('[console]', m.text());
+              });
+              page.on('response', (r) => {
+                if (r.status() >= 400) console.log('[http]', r.status(), r.url());
+              });
+              await page.goto('http://127.0.0.1:4173/egor-lobby-redesign/', {
+                waitUntil: 'networkidle',
+                timeout: 90000,
+              });
+              await page.waitForSelector('.arena-grid', { timeout: 60000 });
+
+              const section = page.locator('.arena-section');
+              await section.scrollIntoViewIfNeeded();
+              await page.waitForTimeout(1500);
+              await section.screenshot({ path: `tools/visual-check/out/arena-${theme}.png` });
+
+              const info = await page.evaluate(() => {
+                const cards = Array.from(document.querySelectorAll('.arena-card'));
+                return cards.map((card) => {
+                  const img = card.querySelector('.arena-emblem img');
+                  const box = card.getBoundingClientRect();
+                  return {
+                    name: card.querySelector('h3')?.textContent ?? null,
+                    emblem: img ? img.getAttribute('src') : 'trophy-fallback',
+                    emblemLoaded: img ? img.naturalWidth > 0 : null,
+                    chips: Array.from(card.querySelectorAll('.arena-chip')).map(
+                      (c) => c.textContent.trim().replace(/\s+/g, ' ')
+                    ),
+                    featured: !!card.querySelector('.arena-featured'),
+                    height: Math.round(box.height),
+                  };
+                });
+              });
+              fs.writeFileSync(
+                `tools/visual-check/out/inspection-${theme}.json`,
+                JSON.stringify(info, null, 2)
+              );
+              console.log(theme, JSON.stringify(info));
+              await ctx.close();
+            }
+            await browser.close();
+          })().catch((e) => {
+            console.error('shots failed:', e);
+            process.exit(1);
+          });
+          JS
+          cd /tmp/pw && node shots.js
+          ls -la tools/visual-check/out
+
+      - name: Commit screenshots
+        run: |
+          git config user.name 'arena-ai-coding-agent[bot]'
+          git config user.email '298482267+arena-ai-coding-agent[bot]@users.noreply.github.com'
+          git add -A tools/visual-check
+          if git diff --cached --quiet; then
+            echo 'nothing to commit'
+          else
+            git commit -m 'chore(tools): arena section screenshots [skip ci]'
+            git push
+          fi

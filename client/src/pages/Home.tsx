@@ -13,12 +13,14 @@ import {
   LogOut,
   Map,
   Menu,
+  MonitorSmartphone,
   Moon,
   Radio,
   Search,
   Sun,
   Shield,
   Sparkles,
+  Star,
   Swords,
   Trophy,
   Users,
@@ -292,47 +294,74 @@ export const getGameForItem = (gameName: string): GameItem => {
   );
 };
 
+/**
+ * Section 05 / TOP ARENAS — mirrors the arena cards of the live lobby at
+ * https://egorgaming.com/lobby, icon for icon:
+ *
+ *  - `logo` holds the arena's own emblem, taken straight from the original
+ *    uploads (`https://app.egorgaming.com/uploads/arenas/<id>/avatar/…`) and
+ *    shipped from `client/public/arenas/`. Arenas that have no avatar of their
+ *    own get the same fallback the original renders: a solid tile with a white
+ *    trophy (see the markup below).
+ *  - `platform` / `category` are the two chips printed under each card on the
+ *    original — platform uses `MonitorSmartphone`, the category pill uses
+ *    `Gamepad2`, both lucide icons, exactly like the source site.
+ *  - `featured` renders the original's filled-star FEATURED flag.
+ */
 const arenas: {
   name: string;
-  tag: string;
+  platform: string;
+  category: string;
   members: string;
   desc: string;
   tone: string;
-  mark: string;
+  featured?: boolean;
   logo?: string;
+  /**
+   * `tile` (default) fills the emblem frame with a raster avatar the way the
+   * original does; `float` keeps an alpha-cut emblem floating on the card.
+   */
+  emblemFit?: "tile" | "float";
 }[] = [
   {
     name: "ALGERIAN ESPORTS FEDERATION",
-    tag: "cross platform",
+    platform: "cross platform",
+    category: "organizers",
     members: "2.4k",
     desc: "Driving the future of gaming in Algeria. Official tournaments, talent, and community.",
     tone: "lime",
-    mark: "AEF",
+    featured: true,
+    logo: "/arenas/arena-42.jpg",
   },
   {
     name: "THE REFUGE ACADEMY",
-    tag: "esports club",
+    platform: "cross platform",
+    category: "esports club",
     members: "1.8k",
     desc: "Home for ambitious players and future champions. Powered by EGOR Gaming.",
     tone: "blue",
-    mark: "RA",
+    featured: true,
+    logo: "/arenas/arena-39.jpg",
   },
   {
     name: "MLBB ALGERIA",
-    tag: "mobile community",
+    platform: "mobile",
+    category: "community",
     members: "1.1k",
     desc: "Official competitive hub for Mobile Legends: Bang Bang in Algeria.",
     tone: "violet",
-    mark: "ML",
+    // No avatar on the original either — it shows the trophy fallback.
   },
   {
     name: "7OUMA ARENA",
-    tag: "mobile organizers",
+    platform: "mobile",
+    category: "organizers",
     members: "980",
     desc: "A competitive home for mobile gaming, local events, and the next generation.",
     tone: "orange",
-    mark: "7A",
+    featured: true,
     logo: "/arenas/7ouma-arena.png",
+    emblemFit: "float",
   },
 ];
 
@@ -1275,23 +1304,45 @@ export default function Home() {
                 key={arena.name}
               >
                 <div className="arena-top">
-                  {arena.logo ? (
-                    <img
-                      className="arena-logo"
-                      src={assetUrl(arena.logo)}
-                      alt={`${arena.name} logo`}
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  ) : (
-                    <span className="arena-badge">{arena.mark}</span>
-                  )}
-                  <span className="arena-rank">0{index + 1}</span>
+                  <span
+                    className={`arena-emblem${
+                      arena.logo ? "" : " arena-emblem--empty"
+                    }${arena.emblemFit === "float" ? " arena-emblem--float" : ""}`}
+                  >
+                    {arena.logo ? (
+                      <img
+                        src={assetUrl(arena.logo)}
+                        alt={`${arena.name} emblem`}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    ) : (
+                      /* Original lobby fallback: white trophy on a solid tile. */
+                      <Trophy size={22} strokeWidth={2} aria-hidden="true" />
+                    )}
+                  </span>
+                  <div className="arena-top-meta">
+                    {arena.featured && (
+                      <span className="arena-featured">
+                        <Star size={10} strokeWidth={2} fill="currentColor" />
+                        Featured
+                      </span>
+                    )}
+                    <span className="arena-rank">0{index + 1}</span>
+                  </div>
                 </div>
                 <div className="arena-copy">
-                  <span className="arena-tag">
-                    <i /> {arena.tag}
-                  </span>
+                  {/* Same two chips as the original lobby footer. */}
+                  <div className="arena-chips">
+                    <span className="arena-chip arena-chip--platform">
+                      <MonitorSmartphone size={12} strokeWidth={2} />
+                      {arena.platform}
+                    </span>
+                    <span className="arena-chip arena-chip--category">
+                      <Gamepad2 size={12} strokeWidth={2} />
+                      {arena.category}
+                    </span>
+                  </div>
                   <h3>{arena.name}</h3>
                   <p>{arena.desc}</p>
                 </div>

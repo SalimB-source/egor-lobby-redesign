@@ -958,7 +958,7 @@ a {
 }
 .arena-card {
   --accent: var(--lime);
-  min-height: 272px;
+  min-height: 296px;
   display: flex;
   flex-direction: column;
   padding: 18px;
@@ -987,27 +987,63 @@ a {
   align-items: center;
   justify-content: space-between;
 }
-.arena-badge {
+.arena-top {
+  align-items: flex-start;
+  gap: 10px;
+}
+.arena-top-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+/* Emblem frame — the same 56px avatar tile the live lobby puts on each arena
+   card (uploads/arenas/<id>/avatar). Arenas without an avatar of their own get
+   the original's fallback: a solid tile with a white trophy. */
+.arena-emblem {
   display: grid;
   place-items: center;
-  width: 38px;
-  height: 38px;
+  width: 54px;
+  height: 54px;
+  flex: none;
+  overflow: hidden;
+  background: var(--surface-3);
+  border: 1px solid var(--line-strong);
+  color: #fff;
+  transition:
+    border-color 0.2s,
+    transform 0.2s var(--ease);
+}
+.arena-emblem img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* Alpha-cut emblem: no background box, the crest floats on the card. */
+.arena-emblem--float img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgb(0 0 0 / 0.45));
+}
+.arena-emblem--empty {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.arena-card:hover .arena-emblem {
+  border-color: var(--accent);
+  transform: scale(1.04);
+}
+/* Filled star flag, straight off the original arena cards. */
+.arena-featured {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 6px;
   border: 1px solid var(--accent);
   color: var(--accent);
-  font: 700 12px var(--display);
-}
-/* Official arena emblem PNG — shipped with a true alpha channel so the
-   shield floats on the card with no background box. */
-.arena-logo {
-  width: 52px;
-  height: 52px;
-  object-fit: contain;
-  background: transparent;
-  filter: drop-shadow(0 4px 12px rgb(0 0 0 / 0.45));
-  transition: transform 0.2s var(--ease);
-}
-.arena-card:hover .arena-logo {
-  transform: scale(1.06);
+  font: 500 8px var(--mono);
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
 }
 .arena-rank {
   color: var(--dim);
@@ -1016,18 +1052,38 @@ a {
 .arena-copy {
   margin-top: auto;
 }
-.arena-tag {
-  color: var(--accent);
+/* Platform + category chips: MonitorSmartphone / Gamepad2, the same lucide
+   glyphs the original prints under each arena. */
+.arena-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 11px;
+}
+.arena-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   font: 500 8px var(--mono);
   letter-spacing: 0.11em;
   text-transform: uppercase;
+  white-space: nowrap;
 }
-.arena-tag i {
-  display: inline-block;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--accent);
+.arena-chip--platform {
+  color: var(--accent);
+}
+.arena-chip--category {
+  padding: 4px 7px;
+  border: 1px solid var(--line-strong);
+  color: var(--muted);
+  transition:
+    border-color 0.2s,
+    color 0.2s;
+}
+.arena-card:hover .arena-chip--category {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 .arena-copy h3 {
   margin: 10px 0 9px;
