@@ -15,3 +15,5 @@ Push a change touching `tools/fetch-egor/**` (this file works) and the
 The workflow is a build-time helper only — it is not shipped with the site.
 
 Run: re-triggered after the first attempt hit a blocked/challenged response.
+
+Run 2: SSR shell is a Next.js skeleton — switching to a Playwright render.

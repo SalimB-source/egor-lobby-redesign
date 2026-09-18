@@ -18,71 +18,154 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Download original lobby markup
-        run: |
-          mkdir -p tools/fetch-egor/out client/public/arenas
-          UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36'
-          for attempt in 1 2 3; do
-            code=$(curl -sSL --compressed --max-time 60 -A "$UA" \
-              -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' \
-              -H 'Accept-Language: en-US,en;q=0.9,fr;q=0.8' \
-              -H 'Upgrade-Insecure-Requests: 1' \
-              -w '%{http_code}' -D "tools/fetch-egor/out/lobby-attempt${attempt}.headers" \
-              -o "tools/fetch-egor/out/lobby-attempt${attempt}.html" \
-              https://egorgaming.com/lobby || true)
-            echo "attempt ${attempt}: HTTP ${code}, $(wc -c < "tools/fetch-egor/out/lobby-attempt${attempt}.html" 2>/dev/null || echo 0) bytes"
-            cp "tools/fetch-egor/out/lobby-attempt${attempt}.html" tools/fetch-egor/out/lobby.html 2>/dev/null || true
-            if [ -s tools/fetch-egor/out/lobby.html ] && grep -qi 'uploads/arenas' tools/fetch-egor/out/lobby.html; then
-              echo "attempt ${attempt}: looks like the real page"
-              break
-            fi
-            sleep 5
-          done
-          echo "--- first 400 chars of what we got ---"
-          head -c 400 tools/fetch-egor/out/lobby.html || true
-          echo
-          echo "--- write a compact diagnostic ---"
-          {
-            echo "bytes: $(wc -c < tools/fetch-egor/out/lobby.html)"
-            echo "arena upload refs: $(grep -o 'uploads/arenas' tools/fetch-egor/out/lobby.html | wc -l)"
-            echo "arental markers: $(grep -o 'Top Arenas' tools/fetch-egor/out/lobby.html | wc -l)"
-            echo "title: $(grep -o '<title>[^<]*</title>' tools/fetch-egor/out/lobby.html | head -1)"
-          } | tee tools/fetch-egor/out/diagnostic.txt
-
-      - name: Slice out the Top Arenas markup
+      - name: Download original lobby markup (SSR shell)
         continue-on-error: true
         run: |
-          python3 - <<'PY'
-          import re, pathlib
-          p = pathlib.Path('tools/fetch-egor/out/lobby.html')
-          html = p.read_text('utf-8', 'ignore') if p.exists() else ''
-          out = pathlib.Path('tools/fetch-egor/out/top-arenas.html')
-          idx = html.find('Top Arenas')
-          if idx == -1:
-              out.write_text(html[:40000], 'utf-8')
-              print('no Top Arenas anchor; dumped the head instead')
-          else:
-              out.write_text(html[max(0, idx - 6000): idx + 20000], 'utf-8')
-              print(f'top-arenas slice written (anchor at {idx})')
-          PY
-          grep -o 'app\.egorgaming\.com/uploads/arenas/[0-9]*/avatar/[^"'"'"' ]*' tools/fetch-egor/out/lobby.html \
-            | sort -u > tools/fetch-egor/out/arena-icons.txt || true
-          cat tools/fetch-egor/out/arena-icons.txt || true
+          mkdir -p tools/fetch-egor/out/artifacts client/public/arenas
+          UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36'
+          code=$(curl -sSL --compressed --max-time 60 -A "$UA" \
+            -H 'Accept: text/html,application/xhtml+xml' -H 'Accept-Language: en-US,en;q=0.9' \
+            -w '%{http_code}' -o tools/fetch-egor/out/lobby.html https://egorgaming.com/lobby || true)
+          echo "lobby HTTP ${code}, $(wc -c < tools/fetch-egor/out/lobby.html) bytes"
+
+      - name: Install Playwright (scratch dir, keeps the repo clean)
+        continue-on-error: true
+        run: |
+          mkdir -p /tmp/pw
+          cd /tmp/pw
+          npm init -y >/dev/null
+          npm i playwright@1.49.1 --no-audit --no-fund
+          npx playwright install --with-deps chromium
+
+      - name: Render the lobby and capture its iconography
+        continue-on-error: true
+        env:
+          OUT: ${{ github.workspace }}/tools/fetch-egor/out/artifacts
+        run: |
+          cat > /tmp/pw/render.js <<'JS'
+          const { chromium } = require('playwright');
+          const fs = require('fs');
+          const path = require('path');
+          const OUT = process.env.OUT;
+
+          (async () => {
+            const browser = await chromium.launch();
+            const ctx = await browser.newContext({
+              viewport: { width: 1536, height: 1100 },
+              userAgent:
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36',
+            });
+            const page = await ctx.newPage();
+
+            const api = [];
+            page.on('response', async (res) => {
+              const url = res.url();
+              if (!/app\.egorgaming\.com/.test(url)) return;
+              const type = res.request().resourceType();
+              if (type === 'image' || type === 'media' || type === 'font') return;
+              try {
+                api.push({ url, status: res.status(), body: await res.text() });
+              } catch (e) {
+                api.push({ url, status: res.status(), error: String(e) });
+              }
+            });
+
+            await page.goto('https://egorgaming.com/lobby', {
+              waitUntil: 'domcontentloaded',
+              timeout: 120000,
+            });
+            await page.waitForTimeout(12000);
+
+            // Scroll the whole page so every lazy section renders.
+            await page.evaluate(async () => {
+              const step = window.innerHeight * 0.8;
+              for (let y = 0; y < document.body.scrollHeight; y += step) {
+                window.scrollTo(0, y);
+                await new Promise((r) => setTimeout(r, 450));
+              }
+              window.scrollTo(0, 0);
+            });
+            await page.waitForTimeout(6000);
+
+            const html = await page.content();
+            fs.writeFileSync(path.join(OUT, 'rendered.html'), html);
+
+            // Isolate the "Top Arenas" section in the rendered DOM.
+            const sectionHtml = await page.evaluate(() => {
+              const nodes = Array.from(document.querySelectorAll('section, div'));
+              const hit = nodes.find((n) =>
+                /Top Arenas/i.test(n.textContent || '') &&
+                n.querySelectorAll('img').length > 0 &&
+                n.querySelectorAll('a[href*="/arena/"]').length > 0
+              );
+              return hit ? hit.outerHTML : '';
+            });
+            fs.writeFileSync(path.join(OUT, 'top-arenas-rendered.html'), sectionHtml || 'not found');
+
+            // Every arena avatar/icon URL the rendered cards point at.
+            const iconUrls = await page.evaluate(() =>
+              Array.from(document.querySelectorAll('img'))
+                .map((i) => i.currentSrc || i.src)
+                .filter((s) => /uploads\/arenas\/.*\/(avatar|icon)\//.test(s))
+            );
+            fs.writeFileSync(
+              path.join(OUT, 'arena-icon-urls.txt'),
+              Array.from(new Set(iconUrls)).join('\n')
+            );
+
+            // Screenshots: full page + the arena section only.
+            await page.screenshot({ path: path.join(OUT, 'lobby-full.png'), fullPage: true });
+            const section = page.locator('a[href*="/arena/"]').first();
+            if (await section.count()) {
+              await section.scrollIntoViewIfNeeded();
+              await page.waitForTimeout(1500);
+            }
+            await page.screenshot({ path: path.join(OUT, 'lobby-viewport.png') });
+            try {
+              const handle = await page.evaluateHandle(() => {
+                const hit = Array.from(document.querySelectorAll('section')).find((n) =>
+                  /Top Arenas/i.test(n.textContent || '')
+                );
+                return hit || null;
+              });
+              const el = handle.asElement();
+              if (el) {
+                await el.scrollIntoViewIfNeeded();
+                await page.waitForTimeout(1200);
+                await el.screenshot({ path: path.join(OUT, 'top-arenas.png') });
+              }
+            } catch (e) {
+              console.log('arena section screenshot failed:', e.message);
+            }
+
+            fs.writeFileSync(path.join(OUT, 'api-calls.json'), JSON.stringify(api, null, 2));
+            console.log('captured', api.length, 'non-image API responses');
+            console.log('icon urls:', iconUrls.length);
+
+            await browser.close();
+          })().catch((e) => {
+            console.error('render failed:', e);
+            process.exit(1);
+          });
+          JS
+          cd /tmp/pw && node render.js
+          ls -la "$OUT"
 
       - name: Download every arena icon
         continue-on-error: true
         run: |
           UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36'
-          while read -r path; do
-            [ -n "$path" ] || continue
-            id=$(printf '%s' "$path" | sed -n 's#.*/arenas/\([0-9]*\)/avatar/.*#\1#p')
+          while read -r url; do
+            [ -n "$url" ] || continue
+            id=$(printf '%s' "$url" | sed -n 's#.*/arenas/\([0-9]*\)/.*#\1#p')
             [ -n "$id" ] || continue
-            ext="${path##*.}"
+            ext="${url##*.}"
+            ext="${ext%%\?*}"
             curl -sSL --compressed --max-time 60 -A "$UA" -e https://egorgaming.com/lobby \
-              -w "arena ${id}: HTTP %{http_code} %{size_download}B\n" -o "client/public/arenas/arena-${id}.${ext}" \
-              "https://${path}" || true
-          done < tools/fetch-egor/out/arena-icons.txt
-          ls -la client/public/arenas || true
+              -w "arena ${id}: HTTP %{http_code} %{size_download}B\n" \
+              -o "client/public/arenas/arena-${id}.${ext}" "$url" || true
+          done < tools/fetch-egor/out/artifacts/arena-icon-urls.txt
+          ls -la client/public/arenas
 
       - name: Commit fetched assets
         run: |
@@ -92,6 +175,6 @@ jobs:
           if git diff --cached --quiet; then
             echo 'nothing to commit'
           else
-            git commit -m 'chore(tools): fetch original EGOR lobby arena icons [skip ci]'
+            git commit -m 'chore(tools): capture original EGOR lobby DOM and arena icons [skip ci]'
             git push
           fi
