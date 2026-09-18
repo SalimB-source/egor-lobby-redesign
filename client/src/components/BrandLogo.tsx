@@ -1,5 +1,7 @@
 import { useState, type ReactNode } from "react";
 
+import { assetUrl } from "@/lib/utils";
+
 /**
  * EGOR brand assets — single source of truth.
  *
@@ -13,10 +15,10 @@ import { useState, type ReactNode } from "react";
  * Every logo on the site (top bar, footer, auth modals) reads from here. Point the
  * favicon in `client/index.html` at the same file.
  *
- * Paths are resolved through `assetUrl()`, which prefixes Vite's `BASE_URL`. That
- * matters for the GitHub Pages deploy, where the site lives under
- * `/egor-lobby-redesign/` — a bare `/egor-logo.svg` would resolve to the domain root
- * and 404. Absolute URLs (`https://…`, `data:…`) are passed through untouched.
+ * Paths are resolved through `assetUrl()` (shared from `@/lib/utils`), which prefixes
+ * Vite's `BASE_URL`. That matters for the GitHub Pages deploy, where the site lives
+ * under `/egor-lobby-redesign/` — a bare `/egor-logo.svg` would resolve to the domain
+ * root and 404. Absolute URLs (`https://…`, `data:…`) are passed through untouched.
  *
  * If an image fails to load (missing file, deploy hiccup), the original CSS-drawn
  * geometric mark is rendered instead so the site never shows a broken image.
@@ -24,15 +26,6 @@ import { useState, type ReactNode } from "react";
 export const LOGO_MARK_SRC: string | null = "/egor-logo.svg";
 export const LOGO_LOCKUP_SRC: string | null = null;
 export const LOGO_ALT = "EGOR Gaming";
-
-/**
- * Resolve a `client/public` path against the deploy base path.
- * `BASE_URL` is `"/"` locally and `"/egor-lobby-redesign/"` on GitHub Pages.
- */
-function assetUrl(path: string): string {
-  if (/^(https?:|data:|blob:)/.test(path)) return path;
-  return `${import.meta.env.BASE_URL}${path.replace(/^\/+/, "")}`;
-}
 
 export type BrandMarkSize = "sm" | "md" | "lg";
 
