@@ -93,20 +93,20 @@
   ],
   "search:arena": [
     {
-      "text": "cross platformALGERIAN ESPORTS FEDERATIONArena Hub2.4k members · organizersGO",
-      "badge": "cross platform"
+      "text": "AEFALGERIAN ESPORTS FEDERATIONArena Hub2.4k members · organizersGO",
+      "badge": "AEF"
     },
     {
-      "text": "cross platformTHE REFUGE ACADEMYArena Hub1.8k members · esports clubGO",
-      "badge": "cross platform"
+      "text": "RATHE REFUGE ACADEMYArena Hub1.8k members · esports clubGO",
+      "badge": "RA"
     },
     {
-      "text": "mobileMLBB ALGERIAArena Hub1.1k members · communityGO",
-      "badge": "mobile"
+      "text": "MLBBMLBB ALGERIAArena Hub1.1k members · communityGO",
+      "badge": "MLBB"
     },
     {
-      "text": "mobile7OUMA ARENAArena Hub980 members · organizersGO",
-      "badge": "mobile"
+      "text": "7A7OUMA ARENAArena Hub980 members · organizersGO",
+      "badge": "7A"
     }
   ],
   "search:refuge": [
@@ -119,8 +119,8 @@
       "badge": null
     },
     {
-      "text": "cross platformTHE REFUGE ACADEMYArena Hub1.8k members · esports clubGO",
-      "badge": "cross platform"
+      "text": "RATHE REFUGE ACADEMYArena Hub1.8k members · esports clubGO",
+      "badge": "RA"
     }
   ],
   "mobile": {
