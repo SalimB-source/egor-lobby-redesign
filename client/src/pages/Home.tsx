@@ -300,9 +300,12 @@ export const getGameForItem = (gameName: string): GameItem => {
  *
  *  - `logo` holds the arena's own emblem, taken straight from the original
  *    uploads (`https://app.egorgaming.com/uploads/arenas/<id>/avatar/…`) and
- *    shipped from `client/public/arenas/`. Arenas that have no avatar of their
- *    own get the same fallback the original renders: a solid tile with a white
- *    trophy (see the markup below).
+ *    shipped from `client/public/arenas/`. The two original JPEG avatars came on
+ *    a white canvas, so their background was cut out before shipping (alpha
+ *    WebP) — that is what lets the emblem bleed across the card's full-height
+ *    left strip instead of showing up as a small white square. Arenas that have
+ *    no avatar of their own get the same fallback the original renders: a solid
+ *    tile with a white trophy (see the markup below).
  *  - `platform` / `category` are the two chips printed under each card on the
  *    original — platform uses `MonitorSmartphone`, the category pill uses
  *    `Gamepad2`, both lucide icons, exactly like the source site.
@@ -319,11 +322,6 @@ const arenas: {
   tone: string;
   featured?: boolean;
   logo?: string;
-  /**
-   * `tile` (default) fills the emblem frame with a raster avatar the way the
-   * original does; `float` keeps an alpha-cut emblem floating on the card.
-   */
-  emblemFit?: "tile" | "float";
 }[] = [
   {
     name: "ALGERIAN ESPORTS FEDERATION",
@@ -334,7 +332,7 @@ const arenas: {
     desc: "Driving the future of gaming in Algeria. Official tournaments, talent, and community.",
     tone: "lime",
     featured: true,
-    logo: "/arenas/arena-42.jpg",
+    logo: "/arenas/arena-42.webp",
   },
   {
     name: "THE REFUGE ACADEMY",
@@ -345,7 +343,7 @@ const arenas: {
     desc: "Home for ambitious players and future champions. Powered by EGOR Gaming.",
     tone: "blue",
     featured: true,
-    logo: "/arenas/arena-39.jpg",
+    logo: "/arenas/arena-39.webp",
   },
   {
     name: "MLBB ALGERIA",
@@ -367,7 +365,6 @@ const arenas: {
     tone: "orange",
     featured: true,
     logo: "/arenas/7ouma-arena.png",
-    emblemFit: "float",
   },
 ];
 
@@ -1324,11 +1321,20 @@ export default function Home() {
                 className={`arena-card arena-card--${arena.tone}`}
                 key={arena.name}
               >
-                {/* Left square: the arena emblem tile the lobby uses as avatar. */}
+                {/* Left strip: the arena emblem bled across the card's full
+                    left edge — the panel is as tall as the card, and the
+                    artwork backfills it (see .arena-emblem in index.css). */}
                 <div
                   className={`arena-emblem${
                     arena.logo ? "" : " arena-emblem--empty"
-                  }${arena.emblemFit === "float" ? " arena-emblem--float" : ""}`}
+                  }`}
+                  style={
+                    arena.logo
+                      ? ({
+                          "--arena-logo": `url(${assetUrl(arena.logo)})`,
+                        } as CSSProperties)
+                      : undefined
+                  }
                 >
                   {arena.logo ? (
                     <img
