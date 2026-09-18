@@ -950,20 +950,24 @@ a {
 .arena-section {
   padding-top: 112px;
 }
+/* Section 05 — horizontal cards: a square emblem tile bleeds off the left edge,
+   the arena copy and its button live in the rectangle on the right. */
 .arena-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
   margin-top: 24px;
 }
 .arena-card {
   --accent: var(--lime);
-  min-height: 296px;
-  display: flex;
-  flex-direction: column;
-  padding: 18px;
+  /* Reference square size; the tile keeps this height even if the copy grows. */
+  --arena-square: 196px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  min-height: var(--arena-square);
   background: linear-gradient(145deg, var(--surface-2), var(--surface));
   border: 1px solid var(--line);
+  overflow: hidden;
   transition:
     transform 0.2s var(--ease),
     border-color 0.2s;
@@ -981,60 +985,77 @@ a {
   transform: translateY(-5px);
   border-color: var(--accent);
 }
-.arena-top,
-.arena-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.arena-top {
-  align-items: flex-start;
-  gap: 10px;
-}
-.arena-top-meta {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-/* Emblem frame — the same 56px avatar tile the live lobby puts on each arena
-   card (uploads/arenas/<id>/avatar). Arenas without an avatar of their own get
-   the original's fallback: a solid tile with a white trophy. */
+/* Left square — the same avatar tile the live lobby puts on each arena card
+   (uploads/arenas/<id>/avatar), scaled up to fill the card's left edge. */
 .arena-emblem {
+  position: relative;
   display: grid;
   place-items: center;
-  width: 54px;
-  height: 54px;
-  flex: none;
+  align-self: center;
+  width: var(--arena-square);
+  height: var(--arena-square);
   overflow: hidden;
   background: var(--surface-3);
-  border: 1px solid var(--line-strong);
   color: #fff;
   transition:
     border-color 0.2s,
-    transform 0.2s var(--ease);
+    background 0.2s;
 }
 .arena-emblem img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.25s var(--ease);
 }
+/* No avatar on the original either — solid tone tile with a white trophy. */
 .arena-emblem--empty {
   background: var(--accent);
   border-color: var(--accent);
 }
-.arena-card:hover .arena-emblem {
-  border-color: var(--accent);
-  transform: scale(1.04);
-}
-/* Alpha-cut emblem: no frame at all, the trimmed crest floats on the card.
-   Declared after the shared hover rule so it can opt out of the frame. */
-.arena-emblem--float,
-.arena-card:hover .arena-emblem--float {
-  background: transparent;
-  border-color: transparent;
+/* Alpha-cut crest: tone wash instead of a hard tile, trimmed logo floats. */
+.arena-emblem--float::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  opacity: 0.16;
 }
 .arena-emblem--float img {
-  filter: drop-shadow(0 4px 12px rgb(0 0 0 / 0.45));
+  position: relative;
+  object-fit: contain;
+  padding: 14%;
+  filter: drop-shadow(0 6px 16px rgb(0 0 0 / 0.5));
+}
+.arena-card:hover .arena-emblem img {
+  transform: scale(1.05);
+}
+/* Right rectangle — chips, name, blurb, then members + the view button. */
+.arena-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 17px 18px 16px;
+  border-left: 1px solid var(--line-strong);
+  transition: border-color 0.2s;
+}
+.arena-card:hover .arena-body {
+  border-left-color: var(--accent);
+}
+/* Chips first, rank/flags pushed right; on narrow cards the flags drop to
+   their own line instead of squeezing the chips. */
+.arena-body-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  min-height: 20px;
+}
+.arena-top-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  margin-left: auto;
 }
 /* Filled star flag, straight off the original arena cards. */
 .arena-featured {
@@ -1053,7 +1074,7 @@ a {
   font: 500 11px var(--mono);
 }
 .arena-copy {
-  margin-top: auto;
+  margin: 12px 0 15px;
 }
 /* Platform + category chips: MonitorSmartphone / Gamepad2, the same lucide
    glyphs the original prints under each arena. */
@@ -1062,7 +1083,8 @@ a {
   flex-wrap: wrap;
   align-items: center;
   gap: 6px;
-  margin-bottom: 11px;
+  min-width: 0;
+  flex: 0 1 auto;
 }
 .arena-chip {
   display: inline-flex;
@@ -1089,8 +1111,8 @@ a {
   color: var(--accent);
 }
 .arena-copy h3 {
-  margin: 10px 0 9px;
-  font: 600 23px/0.95 var(--display);
+  margin: 0 0 8px;
+  font: 600 24px/0.98 var(--display);
   letter-spacing: 0.02em;
 }
 .arena-copy p {
@@ -1098,13 +1120,22 @@ a {
   color: var(--muted);
   font-size: 11px;
   line-height: 1.5;
+  text-wrap: pretty;
 }
 .arena-footer {
-  padding-top: 17px;
-  margin-top: 17px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 14px;
+  margin-top: auto;
   border-top: 1px solid var(--line);
   color: var(--muted);
   font: 500 9px var(--mono);
+  transition: border-color 0.2s;
+}
+.arena-card:hover .arena-footer {
+  border-top-color: var(--accent);
 }
 .arena-footer span {
   display: flex;
@@ -1112,16 +1143,23 @@ a {
   gap: 6px;
 }
 .arena-footer button {
-  display: grid;
-  place-items: center;
-  width: 27px;
-  height: 27px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 29px;
+  padding: 0 8px 0 11px;
+  flex: none;
   background: transparent;
   border: 1px solid var(--line-strong);
   color: var(--accent);
+  font: 500 9px var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: all 0.18s var(--ease);
 }
 .arena-footer button:hover {
   background: var(--accent);
+  border-color: var(--accent);
   color: #0a110e;
 }
 .store-section {
@@ -1316,8 +1354,13 @@ html:not(.dark) .gift-card:hover {
   .game-grid {
     grid-template-columns: repeat(3, 1fr);
   }
+  /* Horizontal arena cards get a full row each before the copy is squeezed,
+     with the copy optically centred next to the square. */
   .arena-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
+  }
+  .arena-copy {
+    margin-block: auto;
   }
   .gift-grid {
     grid-template-columns: repeat(3, 1fr);
@@ -1484,6 +1527,18 @@ html:not(.dark) .gift-card:hover {
   .arena-grid {
     grid-template-columns: 1fr;
   }
+  .arena-card {
+    --arena-square: 148px;
+  }
+  .arena-body {
+    padding: 15px 16px 14px;
+  }
+  .arena-copy {
+    margin: 11px 0 13px;
+  }
+  .arena-copy h3 {
+    font-size: 21px;
+  }
   .store-section {
     padding-bottom: 80px;
   }
@@ -1506,6 +1561,20 @@ html:not(.dark) .gift-card:hover {
     left: 18px;
     right: 18px;
     bottom: 18px;
+  }
+}
+@media (max-width: 480px) {
+  .arena-card {
+    --arena-square: 108px;
+  }
+  .arena-body {
+    padding: 13px 14px 12px;
+  }
+  .arena-copy h3 {
+    font-size: 19px;
+  }
+  .arena-footer {
+    padding-top: 12px;
   }
 }
 @media (max-width: 420px) {
