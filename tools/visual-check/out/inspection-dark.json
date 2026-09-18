@@ -1,0 +1,46 @@
+[
+  {
+    "name": "ALGERIAN ESPORTS FEDERATION",
+    "emblem": "/egor-lobby-redesign/arenas/arena-42.jpg",
+    "emblemLoaded": true,
+    "chips": [
+      "cross platform",
+      "organizers"
+    ],
+    "featured": true,
+    "height": 296
+  },
+  {
+    "name": "THE REFUGE ACADEMY",
+    "emblem": "/egor-lobby-redesign/arenas/arena-39.jpg",
+    "emblemLoaded": true,
+    "chips": [
+      "cross platform",
+      "esports club"
+    ],
+    "featured": true,
+    "height": 296
+  },
+  {
+    "name": "MLBB ALGERIA",
+    "emblem": "trophy-fallback",
+    "emblemLoaded": null,
+    "chips": [
+      "mobile",
+      "community"
+    ],
+    "featured": false,
+    "height": 296
+  },
+  {
+    "name": "7OUMA ARENA",
+    "emblem": "/egor-lobby-redesign/arenas/7ouma-arena.png",
+    "emblemLoaded": true,
+    "chips": [
+      "mobile",
+      "organizers"
+    ],
+    "featured": true,
+    "height": 296
+  }
+]
