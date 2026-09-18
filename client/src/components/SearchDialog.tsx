@@ -47,11 +47,12 @@ interface SearchDialogProps {
   }>;
   arenas: Array<{
     name: string;
-    tag: string;
+    short: string;
+    platform: string;
+    category: string;
     members: string;
     desc: string;
     tone: string;
-    mark: string;
   }>;
 }
 
@@ -152,8 +153,8 @@ export function SearchDialog({
         id: `arena-${a.name}`,
         type: "arena",
         title: a.name,
-        subtitle: `${a.members} members · ${a.tag}`,
-        badge: a.mark,
+        subtitle: `${a.members} members · ${a.category}`,
+        badge: a.short,
         tag: "Arena Hub",
         tone: a.tone,
       });
