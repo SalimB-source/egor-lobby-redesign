@@ -1,0 +1,136 @@
+{
+  "arena-dark": [
+    {
+      "name": "ALGERIAN ESPORTS FEDERATION",
+      "emblem": "/egor-lobby-redesign/arenas/arena-42.jpg",
+      "emblemLoaded": true,
+      "chips": [
+        "cross platform",
+        "organizers"
+      ],
+      "featured": true,
+      "height": 296
+    },
+    {
+      "name": "THE REFUGE ACADEMY",
+      "emblem": "/egor-lobby-redesign/arenas/arena-39.jpg",
+      "emblemLoaded": true,
+      "chips": [
+        "cross platform",
+        "esports club"
+      ],
+      "featured": true,
+      "height": 296
+    },
+    {
+      "name": "MLBB ALGERIA",
+      "emblem": "trophy-fallback",
+      "emblemLoaded": null,
+      "chips": [
+        "mobile",
+        "community"
+      ],
+      "featured": false,
+      "height": 296
+    },
+    {
+      "name": "7OUMA ARENA",
+      "emblem": "/egor-lobby-redesign/arenas/7ouma-arena.png",
+      "emblemLoaded": true,
+      "chips": [
+        "mobile",
+        "organizers"
+      ],
+      "featured": true,
+      "height": 296
+    }
+  ],
+  "arena-light": [
+    {
+      "name": "ALGERIAN ESPORTS FEDERATION",
+      "emblem": "/egor-lobby-redesign/arenas/arena-42.jpg",
+      "emblemLoaded": true,
+      "chips": [
+        "cross platform",
+        "organizers"
+      ],
+      "featured": true,
+      "height": 296
+    },
+    {
+      "name": "THE REFUGE ACADEMY",
+      "emblem": "/egor-lobby-redesign/arenas/arena-39.jpg",
+      "emblemLoaded": true,
+      "chips": [
+        "cross platform",
+        "esports club"
+      ],
+      "featured": true,
+      "height": 296
+    },
+    {
+      "name": "MLBB ALGERIA",
+      "emblem": "trophy-fallback",
+      "emblemLoaded": null,
+      "chips": [
+        "mobile",
+        "community"
+      ],
+      "featured": false,
+      "height": 296
+    },
+    {
+      "name": "7OUMA ARENA",
+      "emblem": "/egor-lobby-redesign/arenas/7ouma-arena.png",
+      "emblemLoaded": true,
+      "chips": [
+        "mobile",
+        "organizers"
+      ],
+      "featured": true,
+      "height": 296
+    }
+  ],
+  "search:arena": [
+    {
+      "text": "cross platformALGERIAN ESPORTS FEDERATIONArena Hub2.4k members · organizersGO",
+      "badge": "cross platform"
+    },
+    {
+      "text": "cross platformTHE REFUGE ACADEMYArena Hub1.8k members · esports clubGO",
+      "badge": "cross platform"
+    },
+    {
+      "text": "mobileMLBB ALGERIAArena Hub1.1k members · communityGO",
+      "badge": "mobile"
+    },
+    {
+      "text": "mobile7OUMA ARENAArena Hub980 members · organizersGO",
+      "badge": "mobile"
+    }
+  ],
+  "search:refuge": [
+    {
+      "text": "REFUGE ACADEMY SCRIMScrimFree Fire · The Refuge Academy · 12/15 TeamsGO",
+      "badge": null
+    },
+    {
+      "text": "REFUGE DZ TRNG D-4ScrimPUBG Mobile · 18 / 03 / 2026 · 18/20 TeamsGO",
+      "badge": null
+    },
+    {
+      "text": "cross platformTHE REFUGE ACADEMYArena Hub1.8k members · esports clubGO",
+      "badge": "cross platform"
+    }
+  ],
+  "mobile": {
+    "scrollWidth": 390,
+    "viewport": 390,
+    "cards": [
+      296,
+      296,
+      296,
+      296
+    ]
+  }
+}
