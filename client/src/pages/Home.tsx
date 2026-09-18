@@ -1309,59 +1309,65 @@ export default function Home() {
                 className={`arena-card arena-card--${arena.tone}`}
                 key={arena.name}
               >
-                <div className="arena-top">
-                  <span
-                    className={`arena-emblem${
-                      arena.logo ? "" : " arena-emblem--empty"
-                    }${arena.emblemFit === "float" ? " arena-emblem--float" : ""}`}
-                  >
-                    {arena.logo ? (
-                      <img
-                        src={assetUrl(arena.logo)}
-                        alt={`${arena.name} emblem`}
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    ) : (
-                      /* Original lobby fallback: white trophy on a solid tile. */
-                      <Trophy size={22} strokeWidth={2} aria-hidden="true" />
-                    )}
-                  </span>
-                  <div className="arena-top-meta">
-                    {arena.featured && (
-                      <span className="arena-featured">
-                        <Star size={10} strokeWidth={2} fill="currentColor" />
-                        Featured
+                {/* Left square: the arena emblem tile the lobby uses as avatar. */}
+                <div
+                  className={`arena-emblem${
+                    arena.logo ? "" : " arena-emblem--empty"
+                  }${arena.emblemFit === "float" ? " arena-emblem--float" : ""}`}
+                >
+                  {arena.logo ? (
+                    <img
+                      src={assetUrl(arena.logo)}
+                      alt={`${arena.name} emblem`}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  ) : (
+                    /* Original lobby fallback: white trophy on a solid tile. */
+                    <Trophy size={40} strokeWidth={1.9} aria-hidden="true" />
+                  )}
+                </div>
+                {/* Right rectangle: chips, name, blurb and the view button. */}
+                <div className="arena-body">
+                  <div className="arena-body-head">
+                    {/* Same two chips as the original lobby footer. */}
+                    <div className="arena-chips">
+                      <span className="arena-chip arena-chip--platform">
+                        <MonitorSmartphone size={12} strokeWidth={2} />
+                        {arena.platform}
                       </span>
-                    )}
-                    <span className="arena-rank">0{index + 1}</span>
+                      <span className="arena-chip arena-chip--category">
+                        <Gamepad2 size={12} strokeWidth={2} />
+                        {arena.category}
+                      </span>
+                    </div>
+                    <div className="arena-top-meta">
+                      {arena.featured && (
+                        <span className="arena-featured">
+                          <Star size={10} strokeWidth={2} fill="currentColor" />
+                          Featured
+                        </span>
+                      )}
+                      <span className="arena-rank">0{index + 1}</span>
+                    </div>
                   </div>
-                </div>
-                <div className="arena-copy">
-                  {/* Same two chips as the original lobby footer. */}
-                  <div className="arena-chips">
-                    <span className="arena-chip arena-chip--platform">
-                      <MonitorSmartphone size={12} strokeWidth={2} />
-                      {arena.platform}
-                    </span>
-                    <span className="arena-chip arena-chip--category">
-                      <Gamepad2 size={12} strokeWidth={2} />
-                      {arena.category}
-                    </span>
+                  <div className="arena-copy">
+                    <h3>{arena.name}</h3>
+                    <p>{arena.desc}</p>
                   </div>
-                  <h3>{arena.name}</h3>
-                  <p>{arena.desc}</p>
-                </div>
-                <div className="arena-footer">
-                  <span>
-                    <Users size={14} /> {arena.members} members
-                  </span>
-                  <button
-                    onClick={() => notify(`Opening ${arena.name}`)}
-                    aria-label={`View ${arena.name}`}
-                  >
-                    <ChevronRight size={16} />
-                  </button>
+                  <div className="arena-footer">
+                    <span>
+                      <Users size={14} /> {arena.members} members
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => notify(`Opening ${arena.name}`)}
+                      aria-label={`View ${arena.name}`}
+                    >
+                      View
+                      <ChevronRight size={14} />
+                    </button>
+                  </div>
                 </div>
               </article>
             ))}
