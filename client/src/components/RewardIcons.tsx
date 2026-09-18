@@ -227,8 +227,8 @@ export function TopUpIcon({
       <path d="M11 12h5a1 1 0 0 1 1 1v2.5a1 1 0 0 1-1 1h-5v-4.5z" />
       <circle cx="14.5" cy="14.25" r="0.6" fill="currentColor" />
       {/* Sharp clean arrow pointing upward (top-up) */}
-      <line x1="20" y1="10" x2="20" y2="2.5" />
-      <path d="M16.5 6L20 2.5 23.5 6" />
+      <line x1="20" y1="10" x2="20" y2="3" />
+      <path d="M17.25 5.75L20 3 22.75 5.75" />
     </svg>
   );
 }
