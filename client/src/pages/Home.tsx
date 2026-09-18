@@ -25,6 +25,14 @@ import {
   X,
   Zap,
 } from "lucide-react";
+import {
+  GiftCardIcon,
+  InGameCoinIcon,
+  GameKeyIcon,
+  EventPassIcon,
+  SeasonRewardIcon,
+  TopUpIcon,
+} from "@/components/RewardIcons";
 import { SearchDialog, type SearchItem } from "@/components/SearchDialog";
 import { BrandLockup, BrandMark } from "@/components/BrandLogo";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -318,12 +326,12 @@ const arenas = [
 ];
 
 const gifts = [
-  { label: "Gift Cards", icon: CircleDollarSign },
-  { label: "In-Game Coins", icon: Zap },
-  { label: "Game Keys", icon: Gamepad2 },
-  { label: "Event Passes", icon: CalendarDays },
-  { label: "Season Rewards", icon: Trophy },
-  { label: "Top-Ups", icon: Sparkles },
+  { label: "Gift Cards", icon: GiftCardIcon },
+  { label: "In-Game Coins", icon: InGameCoinIcon },
+  { label: "Game Keys", icon: GameKeyIcon },
+  { label: "Event Passes", icon: EventPassIcon },
+  { label: "Season Rewards", icon: SeasonRewardIcon },
+  { label: "Top-Ups", icon: TopUpIcon },
 ];
 
 function ActionButton({

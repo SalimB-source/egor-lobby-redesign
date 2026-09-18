@@ -1189,25 +1189,36 @@ a {
   align-items: flex-start;
   justify-content: space-between;
   padding: 15px;
-  background: var(--surface);
-  border: 1px solid var(--line);
+  background: #0D0D0D;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
   text-align: left;
-  transition:
-    transform 0.2s,
-    border-color 0.2s;
+  cursor: pointer;
+  transform: scale(1);
+  transition: all 0.3s ease;
 }
 .gift-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--lime);
+  transform: scale(1.03);
+  border-color: rgba(255, 0, 51, 0.6);
+  box-shadow: 0 0 16px rgba(255, 0, 51, 0.15);
 }
 .gift-icon {
-  color: var(--lime);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #FF0033;
+  filter: drop-shadow(0 0 8px rgba(255, 0, 51, 0.4));
+  transition: filter 0.3s ease, color 0.3s ease;
+}
+.gift-card:hover .gift-icon {
+  filter: drop-shadow(0 0 12px rgba(255, 0, 51, 0.8));
 }
 .gift-card > span:nth-child(2) {
   font: 600 16px var(--display);
+  color: #f4f1f1;
 }
 .gift-card small {
-  color: var(--dim);
+  color: #7c6f73;
   font: 500 8px var(--mono);
   letter-spacing: 0.1em;
 }
