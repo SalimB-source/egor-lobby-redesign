@@ -9,3 +9,5 @@ Push a change under `tools/visual-check/**` to trigger it. Removed before merge.
 Re-run after trimming the 7ouma crest and dropping its emblem frame.
 
 Also screenshots the arena data inside the search dialog, plus a mobile shot.
+
+Errors are surfaced as ::error:: annotations (log blobs are blocked from the sandbox).
