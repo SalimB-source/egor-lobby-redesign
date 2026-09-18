@@ -1152,7 +1152,7 @@ export default function Home() {
           {/* Full-bleed tournament arena hero image */}
           <div className="organizer-bg" aria-hidden="true">
             <img
-              src={`${import.meta.env.BASE_URL}organizer-arena-hero.jpg`}
+              src={`${import.meta.env.BASE_URL}organizer-arena-hero.webp`}
               alt=""
               className="organizer-bg-img"
               loading="lazy"
@@ -1160,19 +1160,6 @@ export default function Home() {
             <div className="organizer-bg-overlay" />
           </div>
           <div className="container organizer-grid">
-            <div className="organizer-art">
-              <div className="radar">
-                <div className="radar-ring radar-ring--one" />
-                <div className="radar-ring radar-ring--two" />
-                <div className="radar-sweep" />
-                <Crosshair size={78} strokeWidth={1} />
-                <span className="radar-label radar-label--one">
-                  BRACKET CONTROL
-                </span>
-                <span className="radar-label radar-label--two">LIVE // 24</span>
-                <span className="radar-label radar-label--three">ARENA 07</span>
-              </div>
-            </div>
             <div className="organizer-copy">
               <span className="eyebrow">04 / BUILD THE FIELD</span>
               <h2>

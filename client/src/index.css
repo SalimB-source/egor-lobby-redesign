@@ -903,106 +903,6 @@ a {
   position: relative;
   z-index: 2;
   width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
-  gap: 95px;
-}
-.organizer-art {
-  min-height: 270px;
-  display: grid;
-  place-items: center;
-}
-.radar {
-  position: relative;
-  width: 255px;
-  height: 255px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(8, 11, 16, 0.55),
-    rgba(8, 11, 16, 0.35) 64%,
-    rgba(8, 11, 16, 0.15) 65%
-  );
-  backdrop-filter: blur(6px);
-  border: 1px solid rgba(199, 191, 193, 0.45);
-  box-shadow:
-    0 20px 50px -12px rgba(0, 0, 0, 0.8),
-    0 0 40px -8px rgba(255, 59, 59, 0.25);
-  color: var(--cyan);
-  overflow: hidden;
-}
-.radar-ring {
-  position: absolute;
-  border: 1px solid rgba(199, 191, 193, 0.25);
-  border-radius: 50%;
-}
-.radar-ring--one {
-  width: 165px;
-  height: 165px;
-}
-.radar-ring--two {
-  width: 82px;
-  height: 82px;
-}
-.radar:before,
-.radar:after {
-  content: "";
-  position: absolute;
-  background: rgba(199, 191, 193, 0.22);
-}
-.radar:before {
-  height: 1px;
-  left: 0;
-  right: 0;
-  top: 50%;
-}
-.radar:after {
-  width: 1px;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-}
-.radar-sweep {
-  position: absolute;
-  width: 50%;
-  height: 50%;
-  top: 0;
-  left: 50%;
-  transform-origin: bottom left;
-  background: linear-gradient(
-    45deg,
-    rgba(199, 191, 193, 0.35),
-    transparent 60%
-  );
-  animation: sweep 4s linear infinite;
-}
-@keyframes sweep {
-  to {
-    transform: rotate(360deg);
-  }
-}
-.radar-label {
-  position: absolute;
-  padding: 4px 6px;
-  background: var(--surface-3);
-  color: var(--cyan);
-  font: 500 8px var(--mono);
-  letter-spacing: 0.08em;
-}
-.radar-label--one {
-  top: 24px;
-  right: -3px;
-}
-.radar-label--two {
-  bottom: 42px;
-  left: -15px;
-}
-.radar-label--three {
-  bottom: 8px;
-  right: 22px;
 }
 .organizer-copy {
   max-width: 470px;
@@ -1487,13 +1387,6 @@ html:not(.dark) .gift-card:hover {
         rgba(8, 7, 8, 0.82) 100%
       ),
       linear-gradient(90deg, rgba(255, 59, 59, 0.1), transparent 60%);
-  }
-  .organizer-grid {
-    grid-template-columns: 1fr;
-    gap: 42px;
-  }
-  .organizer-art {
-    min-height: 230px;
   }
   .organizer-copy h2 {
     font-size: 72px;
@@ -3620,13 +3513,6 @@ html:not(.dark) .organizer-stats strong {
 }
 html:not(.dark) .organizer-stats small {
   color: #b3aaad;
-}
-html:not(.dark) .radar {
-  color: #d8d2d4;
-}
-html:not(.dark) .radar-label {
-  background: #24171b;
-  color: #c7bfc1;
 }
 
 /* ---- Arenas / store / footer ---- */
