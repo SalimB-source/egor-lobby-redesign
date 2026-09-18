@@ -3,3 +3,5 @@ network + a browser, this sandbox has neither) and commits screenshots of the
 Section 05 arena cards in both themes.
 
 Push a change under `tools/visual-check/**` to trigger it. Removed before merge.
+
+(out/ paths must be absolute — the shots script runs from /tmp/pw.)

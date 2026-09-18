@@ -51,12 +51,16 @@ jobs:
           npx playwright install --with-deps chromium
 
       - name: Screenshot the arena section
+        env:
+          OUT: ${{ github.workspace }}/tools/visual-check/out
         run: |
           set -euo pipefail
-          mkdir -p tools/visual-check/out
+          mkdir -p "$OUT"
           cat > /tmp/pw/shots.js <<'JS'
           const { chromium } = require('playwright');
           const fs = require('fs');
+          const path = require('path');
+          const OUT = process.env.OUT;
 
           (async () => {
             const browser = await chromium.launch();
@@ -82,7 +86,7 @@ jobs:
               const section = page.locator('.arena-section');
               await section.scrollIntoViewIfNeeded();
               await page.waitForTimeout(1500);
-              await section.screenshot({ path: `tools/visual-check/out/arena-${theme}.png` });
+              await section.screenshot({ path: path.join(OUT, `arena-${theme}.png`) });
 
               const info = await page.evaluate(() => {
                 const cards = Array.from(document.querySelectorAll('.arena-card'));
@@ -102,7 +106,7 @@ jobs:
                 });
               });
               fs.writeFileSync(
-                `tools/visual-check/out/inspection-${theme}.json`,
+                path.join(OUT, `inspection-${theme}.json`),
                 JSON.stringify(info, null, 2)
               );
               console.log(theme, JSON.stringify(info));
@@ -115,7 +119,7 @@ jobs:
           });
           JS
           cd /tmp/pw && node shots.js
-          ls -la tools/visual-check/out
+          ls -la "$OUT"
 
       - name: Commit screenshots
         run: |
