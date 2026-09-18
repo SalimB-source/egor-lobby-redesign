@@ -1,0 +1,21 @@
+HTTP/2 200 
+date: Fri, 18 Sep 2026 08:19:42 GMT
+content-type: text/html; charset=utf-8
+cache-control: no-store, must-revalidate
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+content-security-policy-report-only: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://connect.facebook.net https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' data: blob: https:; connect-src 'self' https://app.egorgaming.com wss://app.egorgaming.com https://accounts.google.com https://graph.facebook.com https://cloudflareinsights.com; frame-src 'self' https://accounts.google.com https://www.facebook.com; worker-src 'self' blob:
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=%2BEa8KDxGum6hHfa35Vx1%2FBjitNRcQNvrWfwGfu4AsmlM1b%2FprGlr7i8E8YIisP7SvWz9I9wTsIxjXeAGPye51ygpvfalCNgiQTbPrc8x%2FA7tZll11O9ZD%2B7p0r0BIhhJVw%3D%3D"}]}
+permissions-policy: camera=(self), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()
+referrer-policy: strict-origin-when-cross-origin
+vary: RSC, Next-Router-State-Tree, Next-Router-Prefetch, Accept-Encoding
+x-content-type-options: nosniff
+x-frame-options: DENY
+x-nextjs-cache: HIT
+cf-cache-status: DYNAMIC
+server-timing: cfCacheStatus;desc="DYNAMIC"
+server-timing: cfEdge;dur=5,cfOrigin;dur=169
+content-encoding: zstd
+server: cloudflare
+cf-ray: a3ceed5b9d36eac6-ORD
+alt-svc: h3=":443"; ma=86400
+
