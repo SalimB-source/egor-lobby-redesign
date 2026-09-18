@@ -1018,13 +1018,6 @@ a {
   height: 100%;
   object-fit: cover;
 }
-/* Alpha-cut emblem: no background box, the crest floats on the card. */
-.arena-emblem--float img {
-  width: 42px;
-  height: 42px;
-  object-fit: contain;
-  filter: drop-shadow(0 4px 12px rgb(0 0 0 / 0.45));
-}
 .arena-emblem--empty {
   background: var(--accent);
   border-color: var(--accent);
@@ -1032,6 +1025,16 @@ a {
 .arena-card:hover .arena-emblem {
   border-color: var(--accent);
   transform: scale(1.04);
+}
+/* Alpha-cut emblem: no frame at all, the trimmed crest floats on the card.
+   Declared after the shared hover rule so it can opt out of the frame. */
+.arena-emblem--float,
+.arena-card:hover .arena-emblem--float {
+  background: transparent;
+  border-color: transparent;
+}
+.arena-emblem--float img {
+  filter: drop-shadow(0 4px 12px rgb(0 0 0 / 0.45));
 }
 /* Filled star flag, straight off the original arena cards. */
 .arena-featured {
