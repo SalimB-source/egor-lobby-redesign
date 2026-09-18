@@ -13,3 +13,5 @@ Push a change touching `tools/fetch-egor/**` (this file works) and the
 4. commit the result with `[skip ci]`.
 
 The workflow is a build-time helper only — it is not shipped with the site.
+
+Run: re-triggered after the first attempt hit a blocked/challenged response.
