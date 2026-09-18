@@ -57,7 +57,7 @@ jobs:
         run: |
           mkdir -p "$OUT"
           set +e
-          NODE_PATH=/tmp/pw/node_modules node tools/visual-check/shots.js >/tmp/shots.log 2>&1
+          NODE_PATH=/tmp/pw/node_modules node tools/visual-check/shots.cjs >/tmp/shots.log 2>&1
           status=$?
           set -e
           tail -80 /tmp/shots.log
