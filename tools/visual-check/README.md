@@ -11,3 +11,5 @@ Re-run after trimming the 7ouma crest and dropping its emblem frame.
 Also screenshots the arena data inside the search dialog, plus a mobile shot.
 
 Errors are surfaced as ::error:: annotations (log blobs are blocked from the sandbox).
+
+Failure reasons are re-emitted as annotations, and partial reports are always committed.

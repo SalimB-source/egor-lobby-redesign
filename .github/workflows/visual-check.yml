@@ -55,12 +55,25 @@ jobs:
 
       - name: Screenshot the arena section
         run: |
-          set -euo pipefail
           mkdir -p "$OUT"
-          NODE_PATH=/tmp/pw/node_modules node tools/visual-check/shots.js
-          ls -la "$OUT"
+          set +e
+          NODE_PATH=/tmp/pw/node_modules node tools/visual-check/shots.js >/tmp/shots.log 2>&1
+          status=$?
+          set -e
+          tail -80 /tmp/shots.log
+          ls -la "$OUT" || true
+          if [ "$status" -ne 0 ]; then
+            # Surface the reason as an annotation: the raw log blobs are not
+            # reachable from the editing sandbox.
+            msg=$(tail -c 2500 /tmp/shots.log \
+              | sed 's/%/%25/g; s/\r/%0D/g' \
+              | sed ':a;N;$!ba;s/\n/%0A/g')
+            echo "::error title=arena shots failed::${msg}"
+          fi
+          exit "$status"
 
       - name: Commit screenshots
+        if: always()
         run: |
           git config user.name 'arena-ai-coding-agent[bot]'
           git config user.email '298482267+arena-ai-coding-agent[bot]@users.noreply.github.com'
