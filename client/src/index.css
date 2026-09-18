@@ -1116,20 +1116,29 @@ html.dark .gift-card {
   outline: 2px solid #FF0033;
   outline-offset: 2px;
 }
+/* 3D icon (colored render from 3dicons.co, transparent PNG): give it a soft
+   depth shadow; drop-shadow follows the alpha silhouette so ground contact
+   feels natural on both light and dark card surfaces. */
 .gift-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #FF0033;
-  filter: drop-shadow(0 0 8px rgba(255, 0, 51, 0.4));
-  transition: filter 0.3s ease, color 0.3s ease, transform 0.3s ease;
+  width: 52px;
+  height: 52px;
+  filter: drop-shadow(0 8px 12px rgba(17, 10, 14, 0.32));
+  transition: filter 0.3s ease, transform 0.3s ease;
 }
-.gift-icon svg {
+.gift-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   display: block;
 }
 .gift-card:hover .gift-icon {
-  filter: drop-shadow(0 0 12px rgba(255, 0, 51, 0.8));
-  transform: scale(1.06);
+  filter:
+    drop-shadow(0 12px 18px rgba(17, 10, 14, 0.38))
+    drop-shadow(0 0 14px rgba(255, 0, 51, 0.3));
+  transform: scale(1.08) rotate(-2deg);
 }
 .gift-card > span:nth-child(2),
 .gift-card .gift-label {

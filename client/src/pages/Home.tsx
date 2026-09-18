@@ -25,14 +25,6 @@ import {
   X,
   Zap,
 } from "lucide-react";
-import {
-  GiftCardIcon,
-  InGameCoinIcon,
-  GameKeyIcon,
-  EventPassIcon,
-  SeasonRewardIcon,
-  TopUpIcon,
-} from "@/components/RewardIcons";
 import { SearchDialog, type SearchItem } from "@/components/SearchDialog";
 import { BrandLockup, BrandMark } from "@/components/BrandLogo";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -325,13 +317,14 @@ const arenas = [
   },
 ];
 
+// Section 06 / REWARDS BAY icons: colored 3D renders from 3dicons.co (CC0 license).
 const gifts = [
-  { label: "Gift Cards", icon: GiftCardIcon },
-  { label: "In-Game Coins", icon: InGameCoinIcon },
-  { label: "Game Keys", icon: GameKeyIcon },
-  { label: "Event Passes", icon: EventPassIcon },
-  { label: "Season Rewards", icon: SeasonRewardIcon },
-  { label: "Top-Ups", icon: TopUpIcon },
+  { label: "Gift Cards", img: "/icons/gifts/gift-cards.png" },
+  { label: "In-Game Coins", img: "/icons/gifts/in-game-coins.png" },
+  { label: "Game Keys", img: "/icons/gifts/game-keys.png" },
+  { label: "Event Passes", img: "/icons/gifts/event-passes.png" },
+  { label: "Season Rewards", img: "/icons/gifts/season-rewards.png" },
+  { label: "Top-Ups", img: "/icons/gifts/top-ups.png" },
 ];
 
 function ActionButton({
@@ -1252,7 +1245,7 @@ export default function Home() {
             </ActionButton>
           </div>
           <div className="gift-grid">
-            {gifts.map(({ label, icon: Icon }) => (
+            {gifts.map(({ label, img }) => (
               <button
                 type="button"
                 className="gift-card"
@@ -1261,7 +1254,14 @@ export default function Home() {
                 aria-label={`${label} — coming soon`}
               >
                 <span className="gift-icon" aria-hidden="true">
-                  <Icon size={21} />
+                  <img
+                    src={img}
+                    alt=""
+                    width="52"
+                    height="52"
+                    loading="lazy"
+                    decoding="async"
+                  />
                 </span>
                 <span className="gift-label">{label}</span>
                 <small>COMING SOON</small>
