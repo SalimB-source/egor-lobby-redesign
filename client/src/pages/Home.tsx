@@ -1267,14 +1267,16 @@ export default function Home() {
           <div className="gift-grid">
             {gifts.map(({ label, icon: Icon }) => (
               <button
+                type="button"
                 className="gift-card"
                 key={label}
                 onClick={() => notify(`${label} coming soon`)}
+                aria-label={`${label} — coming soon`}
               >
-                <span className="gift-icon">
+                <span className="gift-icon" aria-hidden="true">
                   <Icon size={21} />
                 </span>
-                <span>{label}</span>
+                <span className="gift-label">{label}</span>
                 <small>COMING SOON</small>
               </button>
             ))}

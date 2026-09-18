@@ -1182,25 +1182,39 @@ a {
   gap: 10px;
   margin-top: 23px;
 }
+/* Rewards Bay / Top Gifts — theme-responsive cards.
+   Light theme (default, html without .dark): white surface, gray border, dark text.
+   Dark theme (html.dark): solid #0D0D0D surface, subtle light border, white text.
+   Mobile 2-column layout is preserved via the @media (max-width: 760px) rule below. */
 .gift-card {
   min-height: 138px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
+  gap: 10px;
   padding: 15px;
-  background: #0D0D0D;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--surface);
+  border: 1px solid var(--line);
   border-radius: 4px;
   text-align: left;
   cursor: pointer;
+  color: var(--ink);
   transform: scale(1);
   transition: all 0.3s ease;
+}
+html.dark .gift-card {
+  background: #0D0D0D;
+  border-color: rgba(255, 255, 255, 0.08);
 }
 .gift-card:hover {
   transform: scale(1.03);
   border-color: rgba(255, 0, 51, 0.6);
   box-shadow: 0 0 16px rgba(255, 0, 51, 0.15);
+}
+.gift-card:focus-visible {
+  outline: 2px solid #FF0033;
+  outline-offset: 2px;
 }
 .gift-icon {
   display: inline-flex;
@@ -1208,19 +1222,31 @@ a {
   justify-content: center;
   color: #FF0033;
   filter: drop-shadow(0 0 8px rgba(255, 0, 51, 0.4));
-  transition: filter 0.3s ease, color 0.3s ease;
+  transition: filter 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+.gift-icon svg {
+  display: block;
 }
 .gift-card:hover .gift-icon {
   filter: drop-shadow(0 0 12px rgba(255, 0, 51, 0.8));
+  transform: scale(1.06);
 }
-.gift-card > span:nth-child(2) {
+.gift-card > span:nth-child(2),
+.gift-card .gift-label {
   font: 600 16px var(--display);
-  color: #f4f1f1;
+  letter-spacing: 0.02em;
+  color: var(--ink);
 }
 .gift-card small {
-  color: #7c6f73;
+  color: var(--muted);
   font: 500 8px var(--mono);
   letter-spacing: 0.1em;
+}
+/* Light-mode polish: keep the hover glow visible on white surfaces. */
+html:not(.dark) .gift-card:hover {
+  box-shadow:
+    0 10px 24px -12px rgba(26, 20, 23, 0.35),
+    0 0 16px rgba(255, 0, 51, 0.18);
 }
 .footer {
   border-top: 1px solid var(--line);
