@@ -3471,7 +3471,12 @@ html:not(.dark) .mobile-search-btn {
   border-color: var(--lime);
 }
 
-/* ---- Buttons ---- */
+/* ---- Buttons ----
+   Only the solid (primary) button has a red fill in light mode, so pin its
+   label to white. The ghost + dark variants sit on light/transparent
+   backgrounds, so they must keep their dark/accent text (white would be
+   invisible) — restore those explicitly since the base .action-button rule
+   would otherwise leave them white. */
 html:not(.dark) .action-button {
   color: #fff;
 }
@@ -3479,7 +3484,11 @@ html:not(.dark) .action-button:hover {
   box-shadow: 0 14px 30px -12px rgba(214, 31, 43, 0.55);
 }
 html:not(.dark) .action-button--ghost {
+  color: var(--lime);
   border-color: rgba(214, 31, 43, 0.5);
+}
+html:not(.dark) .action-button--dark {
+  color: var(--ink);
 }
 html:not(.dark) .play-button:hover {
   color: #fff;
