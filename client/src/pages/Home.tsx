@@ -292,7 +292,15 @@ export const getGameForItem = (gameName: string): GameItem => {
   );
 };
 
-const arenas = [
+const arenas: {
+  name: string;
+  tag: string;
+  members: string;
+  desc: string;
+  tone: string;
+  mark: string;
+  logo?: string;
+}[] = [
   {
     name: "ALGERIAN ESPORTS FEDERATION",
     tag: "cross platform",
@@ -324,6 +332,7 @@ const arenas = [
     desc: "A competitive home for mobile gaming, local events, and the next generation.",
     tone: "orange",
     mark: "7A",
+    logo: "/arenas/7ouma-arena.png",
   },
 ];
 
@@ -1266,7 +1275,17 @@ export default function Home() {
                 key={arena.name}
               >
                 <div className="arena-top">
-                  <span className="arena-badge">{arena.mark}</span>
+                  {arena.logo ? (
+                    <img
+                      className="arena-logo"
+                      src={assetUrl(arena.logo)}
+                      alt={`${arena.name} logo`}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  ) : (
+                    <span className="arena-badge">{arena.mark}</span>
+                  )}
                   <span className="arena-rank">0{index + 1}</span>
                 </div>
                 <div className="arena-copy">

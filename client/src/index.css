@@ -996,6 +996,19 @@ a {
   color: var(--accent);
   font: 700 12px var(--display);
 }
+/* Official arena emblem PNG — shipped with a true alpha channel so the
+   shield floats on the card with no background box. */
+.arena-logo {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  background: transparent;
+  filter: drop-shadow(0 4px 12px rgb(0 0 0 / 0.45));
+  transition: transform 0.2s var(--ease);
+}
+.arena-card:hover .arena-logo {
+  transform: scale(1.06);
+}
 .arena-rank {
   color: var(--dim);
   font: 500 11px var(--mono);
