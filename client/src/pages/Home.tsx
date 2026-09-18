@@ -869,6 +869,20 @@ export default function Home() {
                 </button>
               </div>
             </div>
+            <aside className="hero-live-panel" aria-label="Live match feed">
+              <div className="hero-live-head">
+                <span><span className="status-dot" /> LIVE FEED</span>
+                <span className="hero-live-code">EGOR / 001</span>
+              </div>
+              <div className="hero-live-match">
+                <span className="eyebrow">NOW PLAYING · FREE FIRE</span>
+                <strong>REFUGE ACADEMY SCRIM</strong>
+                <div className="hero-live-meta"><span>12 / 16 TEAMS</span><span>LIVE NOW</span></div>
+              </div>
+              <button className="hero-live-link" onClick={() => { setMode("scrims"); document.getElementById("tournaments")?.scrollIntoView({ behavior: "smooth" }); }}>
+                Enter the stadium <ArrowRight size={14} />
+              </button>
+            </aside>
             <div className="hero-readout">
               <div>
                 <span>PLAYERS ONLINE</span>
@@ -1302,6 +1316,7 @@ export default function Home() {
             title="TOP ARENAS"
             count="08 TOTAL"
             action="See all arenas"
+            onAction={() => notify("Showing all community arenas")}
           />
           <div className="arena-grid">
             {arenas.map((arena, index) => (
