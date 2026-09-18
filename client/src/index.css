@@ -1008,8 +1008,8 @@ a {
 .arena-section {
   padding-top: 112px;
 }
-/* Section 05 — horizontal cards: a square emblem tile bleeds off the left edge,
-   the arena copy and its button live in the rectangle on the right. */
+/* Section 05 — horizontal cards: the arena emblem fills the card's whole left
+   edge, the arena copy and its button live in the rectangle on the right. */
 .arena-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1018,7 +1018,8 @@ a {
 }
 .arena-card {
   --accent: var(--lime);
-  /* Reference square size; the tile keeps this height even if the copy grows. */
+  /* Reference height: the card is never shorter than this, and the emblem
+     strip below stretches to whatever height the row ends up with. */
   --arena-square: 196px;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
@@ -1043,46 +1044,50 @@ a {
   transform: translateY(-5px);
   border-color: var(--accent);
 }
-/* Left square — the same avatar tile the live lobby puts on each arena card
-   (uploads/arenas/<id>/avatar), scaled up to fill the card's left edge. */
+/* Left strip — the same avatar the live lobby puts on each arena card
+   (uploads/arenas/<id>/avatar), bled across the card's entire left edge.
+   It is a full-height panel, never a floating square: `align-self: stretch`
+   keeps it flush with the card's top and bottom whatever the copy next to it
+   does, so no empty band can appear above or below the logo. */
 .arena-emblem {
   position: relative;
   display: grid;
   place-items: center;
-  align-self: center;
+  align-self: stretch;
   width: var(--arena-square);
-  height: var(--arena-square);
   overflow: hidden;
   background: var(--surface-3);
   color: #fff;
-  transition:
-    border-color 0.2s,
-    background 0.2s;
 }
+/* Backfill: the arena's own artwork, scaled past the strip and blurred, so the
+   panel is completely filled edge to edge no matter what shape the logo is
+   (round crest, shield, alpha-cut PNG, square photo). */
+.arena-emblem::before {
+  content: "";
+  position: absolute;
+  inset: -14%;
+  background-image: var(--arena-logo, none);
+  background-position: center;
+  background-size: cover;
+  filter: blur(22px) saturate(1.15);
+  transform: scale(1.08);
+}
+/* Foreground: the untouched emblem, `contain` so no crest ever gets sliced,
+   sitting on top of its own backfill. */
 .arena-emblem img {
+  position: relative;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  padding: 7%;
+  object-fit: contain;
   transition: transform 0.25s var(--ease);
 }
 /* No avatar on the original either — solid tone tile with a white trophy. */
 .arena-emblem--empty {
   background: var(--accent);
-  border-color: var(--accent);
 }
-/* Alpha-cut crest: tone wash instead of a hard tile, trimmed logo floats. */
-.arena-emblem--float::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--accent);
-  opacity: 0.16;
-}
-.arena-emblem--float img {
-  position: relative;
-  object-fit: contain;
-  padding: 14%;
-  filter: drop-shadow(0 6px 16px rgb(0 0 0 / 0.5));
+.arena-emblem--empty::before {
+  display: none;
 }
 .arena-card:hover .arena-emblem img {
   transform: scale(1.05);
@@ -3826,7 +3831,9 @@ html:not(.dark) .egor-search-external-link {
   transition: opacity 0.25s;
 }
 .arena-card:hover::after { opacity: 1; }
-.arena-emblem {
+/* Tone wash for strips that carry artwork. The avatar-less strip keeps its
+   solid accent fill (and its white trophy) from the base rule above. */
+.arena-emblem:not(.arena-emblem--empty) {
   background: linear-gradient(145deg, color-mix(in srgb, var(--accent) 24%, var(--surface-3)), var(--surface-3));
 }
 .arena-emblem::after {
@@ -3835,6 +3842,9 @@ html:not(.dark) .egor-search-external-link {
   left: 12px;
   bottom: 10px;
   color: rgba(255, 255, 255, 0.55);
+  /* Cards whose artwork backfills the strip in a light tone (white logo
+     canvases) would swallow the label without this. */
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
   font: 500 8px var(--mono);
   letter-spacing: 0.2em;
   writing-mode: vertical-rl;
