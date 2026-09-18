@@ -27,6 +27,16 @@ import {
 } from "lucide-react";
 import { SearchDialog, type SearchItem } from "@/components/SearchDialog";
 import { BrandLockup, BrandMark } from "@/components/BrandLogo";
+import {
+  EventPassIcon,
+  GameKeyIcon,
+  GiftCardIcon,
+  InGameCoinIcon,
+  SeasonRewardIcon,
+  TopUpIcon,
+  type RewardIconProps,
+} from "@/components/RewardIcons";
+import { assetUrl } from "@/lib/utils";
 import { useTheme } from "@/contexts/ThemeContext";
 import {
   LoginModal,
@@ -318,14 +328,71 @@ const arenas = [
 ];
 
 // Section 06 / REWARDS BAY icons: colored 3D renders from 3dicons.co (CC0 license).
-const gifts = [
-  { label: "Gift Cards", img: "/icons/gifts/gift-cards.png" },
-  { label: "In-Game Coins", img: "/icons/gifts/in-game-coins.png" },
-  { label: "Game Keys", img: "/icons/gifts/game-keys.png" },
-  { label: "Event Passes", img: "/icons/gifts/event-passes.png" },
-  { label: "Season Rewards", img: "/icons/gifts/season-rewards.png" },
-  { label: "Top-Ups", img: "/icons/gifts/top-ups.png" },
+// The files live in `client/public/icons/gifts/` and are resolved through
+// `assetUrl()` at render time, so they stay correct when the site is deployed
+// under a base path. `fallback` is the hand-drawn SVG (see `RewardIcons.tsx`)
+// used when a PNG fails to load, so a tile never shows up as an empty box.
+const gifts: {
+  label: string;
+  img: string;
+  fallback: React.ComponentType<RewardIconProps>;
+}[] = [
+  {
+    label: "Gift Cards",
+    img: "/icons/gifts/gift-cards.png",
+    fallback: GiftCardIcon,
+  },
+  {
+    label: "In-Game Coins",
+    img: "/icons/gifts/in-game-coins.png",
+    fallback: InGameCoinIcon,
+  },
+  {
+    label: "Game Keys",
+    img: "/icons/gifts/game-keys.png",
+    fallback: GameKeyIcon,
+  },
+  {
+    label: "Event Passes",
+    img: "/icons/gifts/event-passes.png",
+    fallback: EventPassIcon,
+  },
+  {
+    label: "Season Rewards",
+    img: "/icons/gifts/season-rewards.png",
+    fallback: SeasonRewardIcon,
+  },
+  { label: "Top-Ups", img: "/icons/gifts/top-ups.png", fallback: TopUpIcon },
 ];
+
+/**
+ * One reward icon: the 3D PNG, or its SVG stand-in if the PNG cannot load.
+ */
+function GiftIcon({
+  src,
+  Fallback,
+}: {
+  src: string;
+  Fallback: React.ComponentType<RewardIconProps>;
+}) {
+  const [failed, setFailed] = useState(false);
+
+  if (failed) {
+    return <Fallback size={52} className="gift-icon-svg" aria-hidden="true" />;
+  }
+
+  return (
+    <img
+      src={assetUrl(src)}
+      alt=""
+      width="52"
+      height="52"
+      loading="lazy"
+      decoding="async"
+      onError={() => setFailed(true)}
+    />
+  );
+}
 
 function ActionButton({
   children,
@@ -1245,7 +1312,7 @@ export default function Home() {
             </ActionButton>
           </div>
           <div className="gift-grid">
-            {gifts.map(({ label, img }) => (
+            {gifts.map(({ label, img, fallback }) => (
               <button
                 type="button"
                 className="gift-card"
@@ -1254,14 +1321,7 @@ export default function Home() {
                 aria-label={`${label} — coming soon`}
               >
                 <span className="gift-icon" aria-hidden="true">
-                  <img
-                    src={img}
-                    alt=""
-                    width="52"
-                    height="52"
-                    loading="lazy"
-                    decoding="async"
-                  />
+                  <GiftIcon src={img} Fallback={fallback} />
                 </span>
                 <span className="gift-label">{label}</span>
                 <small>COMING SOON</small>
