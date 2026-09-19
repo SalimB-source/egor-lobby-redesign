@@ -256,10 +256,17 @@ export const scrims: MatchItem[] = [
 ];
 
 /**
- * Section 05 / TOP ARENAS — mirrors the arena cards of the live lobby at
- * https://egorgaming.com/lobby, icon for icon. `logo` holds the arena's own
- * emblem (alpha-cut, shipped from `client/public/arenas/`); arenas without an
- * avatar of their own render the same trophy fallback the original does.
+ * Section 05 / TOP ARENAS — all eight arenas the live lobby at
+ * https://egorgaming.com/lobby prints under "Top Arenas", in its order
+ * (arena ids 42, 41, 39, 34, 33, 26, 25, 24), icon for icon. `platform` and
+ * `category` are the two chips each card carries upstream, and `featured`
+ * follows the ★ Featured flag on arena 42, 39, 33 and 24.
+ *
+ * `logo` holds the arena's own emblem (alpha-cut, shipped from
+ * `client/public/arenas/`); arenas without an avatar of their own render the
+ * same trophy fallback the original does. The live lobby serves an avatar for
+ * arena 33 too — drop it at `client/public/arenas/arena-33.webp` and add the
+ * `logo` line to swap the fallback out.
  */
 export const arenas: ArenaItem[] = [
   {
@@ -272,6 +279,18 @@ export const arenas: ArenaItem[] = [
     tone: "lime",
     featured: true,
     logo: "/arenas/arena-42.webp",
+  },
+  {
+    name: "BLACK OPS",
+    short: "BO",
+    platform: "mobile",
+    category: "organizers",
+    members: "1.6k",
+    // The upstream blurb is literally just "Yes" — the line below restates the
+    // arena's own two chips (mobile / organizers) instead of printing that.
+    desc: "Mobile arena run by its own organizers — scrims, brackets and daily lobbies.",
+    tone: "blue",
+    // No avatar upstream either — it shows the trophy fallback.
   },
   {
     name: "THE REFUGE ACADEMY",
@@ -292,6 +311,36 @@ export const arenas: ArenaItem[] = [
     members: "1.1k",
     desc: "Official competitive hub for Mobile Legends: Bang Bang in Algeria.",
     tone: "violet",
+    // No avatar on the original either — it shows the trophy fallback.
+  },
+  {
+    name: "ESPORT SUPER COMPETITIVE ARENA",
+    short: "ESCA",
+    platform: "cross platform",
+    category: "community",
+    members: "1.3k",
+    desc: "Defining the future of Algerian competitive gaming. Standardizing excellence, elevating talent.",
+    tone: "violet",
+    featured: true,
+  },
+  {
+    name: "POWER FOR KILL",
+    short: "PFK",
+    platform: "mobile",
+    category: "organizers",
+    members: "840",
+    desc: "Force, strategy and intensity — a competitive, immersive mobile arena.",
+    tone: "orange",
+    // No avatar on the original either — it shows the trophy fallback.
+  },
+  {
+    name: "FF DZ ESPORT",
+    short: "FFDZ",
+    platform: "mobile",
+    category: "community",
+    members: "760",
+    desc: "All FF DZ Esport teams join here — the mobile community's registration hub.",
+    tone: "lime",
     // No avatar on the original either — it shows the trophy fallback.
   },
   {

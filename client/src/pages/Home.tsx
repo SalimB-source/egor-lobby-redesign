@@ -167,6 +167,9 @@ export default function Home() {
   }, [mode, gameFilter]);
 
   const totalStadiumCount = `${String(filteredMatches.length).padStart(2, "0")} TOTAL`;
+  // Same padded format as the stadium counter, so the total printed above the
+  // arena wall always matches the number of cards rendered below it.
+  const totalArenaCount = `${String(arenas.length).padStart(2, "0")} TOTAL`;
 
   // Handle URL params: ?game=Free Fire (pre-filter from a catalog card) and
   // ?jump=tournaments|arenas (deep links from the shell / search dialog).
@@ -727,7 +730,7 @@ export default function Home() {
           <SectionHeader
             eyebrow="05 / COMMUNITY SIGNAL"
             title="TOP ARENAS"
-            count="08 TOTAL"
+            count={totalArenaCount}
             action="See all arenas"
             onAction={() => notify("Showing all community arenas")}
           />
@@ -785,7 +788,11 @@ export default function Home() {
                           Featured
                         </span>
                       )}
-                      <span className="arena-rank">0{index + 1}</span>
+                      {/* Padded rank, same two-digit format as the section's
+                          total in the header. */}
+                      <span className="arena-rank">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
                     </div>
                   </div>
                   <div className="arena-copy">
