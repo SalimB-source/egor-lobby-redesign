@@ -4,7 +4,9 @@ import NotFound from "@/pages/NotFound";
 import { Route, Router as WouterRouter, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { ToastProvider } from "./contexts/ToastContext";
 import Home from "./pages/Home";
+import Games from "./pages/Games";
 
 // GitHub Pages serves the site under "/<repo>/", so the router must use the
 // same base path (Vite injects it via BASE_URL). Locally this resolves to "".
@@ -15,6 +17,7 @@ function AppRouter() {
     <WouterRouter base={basePath}>
       <Switch>
         <Route path="/" component={Home} />
+        <Route path="/games" component={Games} />
         <Route path="/login" component={Home} />
         <Route path="/register" component={Home} />
         <Route path="/404" component={NotFound} />
@@ -25,5 +28,16 @@ function AppRouter() {
 }
 
 export default function App() {
-  return <ErrorBoundary><ThemeProvider defaultTheme="light" switchable><TooltipProvider><Toaster /><AppRouter /></TooltipProvider></ThemeProvider></ErrorBoundary>;
+  return (
+    <ErrorBoundary>
+      <ThemeProvider defaultTheme="light" switchable>
+        <ToastProvider>
+          <TooltipProvider>
+            <Toaster />
+            <AppRouter />
+          </TooltipProvider>
+        </ToastProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
+  );
 }

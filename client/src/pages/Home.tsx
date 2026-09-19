@@ -1,34 +1,26 @@
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import {
   ArrowRight,
-  Bell,
   CalendarDays,
   ChevronDown,
   ChevronRight,
-  CircleDollarSign,
-  Clock3,
-  Crosshair,
   Gamepad2,
   LayoutGrid,
-  LogOut,
-  Map,
-  Menu,
   MonitorSmartphone,
-  Moon,
   Radio,
   Search,
-  Sun,
-  Shield,
   Sparkles,
   Star,
   Swords,
   Trophy,
   Users,
   X,
-  Zap,
 } from "lucide-react";
-import { SearchDialog, type SearchItem } from "@/components/SearchDialog";
-import { BrandLockup, BrandMark } from "@/components/BrandLogo";
+import { useLocation } from "wouter";
+import type { SearchItem } from "@/components/SearchDialog";
+import { AppShell } from "@/components/AppShell";
+import { ActionButton } from "@/components/ActionButton";
+import { useToast } from "@/contexts/ToastContext";
 import {
   EventPassIcon,
   GameKeyIcon,
@@ -39,334 +31,13 @@ import {
   type RewardIconProps,
 } from "@/components/RewardIcons";
 import { assetUrl } from "@/lib/utils";
-import { useTheme } from "@/contexts/ThemeContext";
 import {
-  LoginModal,
-  RegisterModal,
-  type UserProfile,
-} from "@/components/AuthModals";
-
-export interface GameItem {
-  name: string;
-  short: string;
-  tone: string;
-  players: string;
-  icon: string;
-  image: string;
-  genre: string;
-}
-
-export interface MatchItem {
-  title: string;
-  game: string;
-  status: string;
-  date: string;
-  teams: string;
-  prize: string;
-  tone: string;
-  icon: string;
-  image?: string;
-}
-
-const games: GameItem[] = [
-  {
-    name: "Free Fire",
-    short: "FF",
-    tone: "lime",
-    players: "12.8k",
-    icon: "◈",
-    image: "games/free-fire.jpg",
-    genre: "Battle Royale",
-  },
-  {
-    name: "PUBG Mobile",
-    short: "PUBG",
-    tone: "blue",
-    players: "8.4k",
-    icon: "▦",
-    image: "games/pubg-mobile.jpg",
-    genre: "Battle Royale",
-  },
-  {
-    name: "Mobile Legends",
-    short: "ML",
-    tone: "violet",
-    players: "6.2k",
-    icon: "✦",
-    image: "games/mobile-legends.jpg",
-    genre: "MOBA 5v5",
-  },
-  {
-    name: "Call of Duty",
-    short: "COD",
-    tone: "orange",
-    players: "4.9k",
-    icon: "⌁",
-    image: "games/call-of-duty.jpg",
-    genre: "Tactical FPS",
-  },
-  {
-    name: "Clash Royale",
-    short: "CR",
-    tone: "red",
-    players: "3.1k",
-    icon: "♜",
-    image: "games/clash-royale.jpg",
-    genre: "Tower Strategy",
-  },
-  {
-    name: "Counter-Strike 2",
-    short: "CS2",
-    tone: "cyan",
-    players: "2.7k",
-    icon: "⊙",
-    image: "games/counter-strike-2.jpg",
-    genre: "Competitive FPS",
-  },
-];
-
-const tournaments: MatchItem[] = [
-  {
-    title: "بطولة للاستمتاع فقط",
-    game: "Free Fire",
-    status: "START SOON",
-    date: "17 MAR 2026",
-    teams: "01 / 40",
-    prize: "0 DZD",
-    tone: "lime",
-    icon: "◈",
-    image: "games/free-fire.jpg",
-  },
-  {
-    title: "Killerdrk",
-    game: "PUBG Mobile",
-    status: "START SOON",
-    date: "17 MAR 2026",
-    teams: "00 / 200",
-    prize: "0 DZD",
-    tone: "blue",
-    icon: "▦",
-    image: "games/pubg-mobile.jpg",
-  },
-  {
-    title: "Amja Championship",
-    game: "Free Fire",
-    status: "START SOON",
-    date: "05 AUG 2026",
-    teams: "00 / 90",
-    prize: "1,000 DZD",
-    tone: "lime",
-    icon: "◈",
-    image: "games/free-fire.jpg",
-  },
-  {
-    title: "COD MOB",
-    game: "Call of Duty",
-    status: "FULL",
-    date: "13 AUG 2026",
-    teams: "32 / 32",
-    prize: "0 DZD",
-    tone: "orange",
-    icon: "⌁",
-    image: "games/call-of-duty.jpg",
-  },
-  {
-    title: "MLBB DZ OPEN CUP",
-    game: "Mobile Legends",
-    status: "START SOON",
-    date: "24 AUG 2026",
-    teams: "16 / 32",
-    prize: "25,000 DZD",
-    tone: "violet",
-    icon: "✦",
-    image: "games/mobile-legends.jpg",
-  },
-  {
-    title: "ROYAL CROWN SERIES",
-    game: "Clash Royale",
-    status: "REGISTERING",
-    date: "02 SEP 2026",
-    teams: "48 / 64",
-    prize: "15,000 DZD",
-    tone: "red",
-    icon: "♜",
-    image: "games/clash-royale.jpg",
-  },
-  {
-    title: "CS2 ALGIERS MASTERS",
-    game: "Counter-Strike 2",
-    status: "START SOON",
-    date: "18 SEP 2026",
-    teams: "08 / 16",
-    prize: "50,000 DZD",
-    tone: "cyan",
-    icon: "⊙",
-    image: "games/counter-strike-2.jpg",
-  },
-];
-
-const scrims: MatchItem[] = [
-  {
-    title: "REFUGE ACADEMY SCRIM",
-    game: "Free Fire",
-    status: "FEATURED",
-    date: "18 MAR 2026",
-    teams: "12 / 16",
-    prize: "—",
-    tone: "lime",
-    icon: "◈",
-    image: "games/free-fire.jpg",
-  },
-  {
-    title: "REFUGE DZ TRNG D-4",
-    game: "PUBG Mobile",
-    status: "LIVE NOW",
-    date: "18 MAR 2026",
-    teams: "18 / 20",
-    prize: "—",
-    tone: "blue",
-    icon: "▦",
-    image: "games/pubg-mobile.jpg",
-  },
-  {
-    title: "WARZONE DZ PROTOCOL",
-    game: "Call of Duty",
-    status: "REGISTERING",
-    date: "20 MAR 2026",
-    teams: "08 / 12",
-    prize: "—",
-    tone: "orange",
-    icon: "⌁",
-    image: "games/call-of-duty.jpg",
-  },
-  {
-    title: "MLBB DAWN SHOWDOWN",
-    game: "Mobile Legends",
-    status: "START SOON",
-    date: "22 MAR 2026",
-    teams: "06 / 08",
-    prize: "—",
-    tone: "violet",
-    icon: "✦",
-    image: "games/mobile-legends.jpg",
-  },
-  {
-    title: "ROYAL DUEL DZ NIGHT",
-    game: "Clash Royale",
-    status: "FEATURED",
-    date: "25 MAR 2026",
-    teams: "14 / 16",
-    prize: "—",
-    tone: "red",
-    icon: "♜",
-    image: "games/clash-royale.jpg",
-  },
-  {
-    title: "ALGIERS 5v5 PROTOCOL",
-    game: "Counter-Strike 2",
-    status: "START SOON",
-    date: "28 MAR 2026",
-    teams: "04 / 08",
-    prize: "—",
-    tone: "cyan",
-    icon: "⊙",
-    image: "games/counter-strike-2.jpg",
-  },
-];
-
-export const getGameForItem = (gameName: string): GameItem => {
-  const normalized = gameName.toLowerCase();
-  const found =
-    games.find(g => g.name.toLowerCase() === normalized) ||
-    games.find(g => normalized.includes(g.name.toLowerCase())) ||
-    games.find(g => normalized.includes(g.short.toLowerCase()));
-
-  return (
-    found || {
-      name: gameName,
-      short: "DZ",
-      tone: "lime",
-      players: "1.0k",
-      icon: "◈",
-      image: "games/free-fire.jpg",
-      genre: "Esports",
-    }
-  );
-};
-
-/**
- * Section 05 / TOP ARENAS — mirrors the arena cards of the live lobby at
- * https://egorgaming.com/lobby, icon for icon:
- *
- *  - `logo` holds the arena's own emblem, taken straight from the original
- *    uploads (`https://app.egorgaming.com/uploads/arenas/<id>/avatar/…`) and
- *    shipped from `client/public/arenas/`. The two original JPEG avatars came on
- *    a white canvas, so their background was cut out before shipping (alpha
- *    WebP) — that is what lets the emblem bleed across the card's full-height
- *    left strip instead of showing up as a small white square. Arenas that have
- *    no avatar of their own get the same fallback the original renders: a solid
- *    tile with a white trophy (see the markup below).
- *  - `platform` / `category` are the two chips printed under each card on the
- *    original — platform uses `MonitorSmartphone`, the category pill uses
- *    `Gamepad2`, both lucide icons, exactly like the source site.
- *  - `featured` renders the original's filled-star FEATURED flag.
- */
-const arenas: {
-  name: string;
-  /** Two-to-four letter code, used by the search dialog badge. */
-  short: string;
-  platform: string;
-  category: string;
-  members: string;
-  desc: string;
-  tone: string;
-  featured?: boolean;
-  logo?: string;
-}[] = [
-  {
-    name: "ALGERIAN ESPORTS FEDERATION",
-    short: "AEF",
-    platform: "cross platform",
-    category: "organizers",
-    members: "2.4k",
-    desc: "Driving the future of gaming in Algeria. Official tournaments, talent, and community.",
-    tone: "lime",
-    featured: true,
-    logo: "/arenas/arena-42.webp",
-  },
-  {
-    name: "THE REFUGE ACADEMY",
-    short: "RA",
-    platform: "cross platform",
-    category: "esports club",
-    members: "1.8k",
-    desc: "Home for ambitious players and future champions. Powered by EGOR Gaming.",
-    tone: "blue",
-    featured: true,
-    logo: "/arenas/arena-39.webp",
-  },
-  {
-    name: "MLBB ALGERIA",
-    short: "MLBB",
-    platform: "mobile",
-    category: "community",
-    members: "1.1k",
-    desc: "Official competitive hub for Mobile Legends: Bang Bang in Algeria.",
-    tone: "violet",
-    // No avatar on the original either — it shows the trophy fallback.
-  },
-  {
-    name: "7OUMA ARENA",
-    short: "7A",
-    platform: "mobile",
-    category: "organizers",
-    members: "980",
-    desc: "A competitive home for mobile gaming, local events, and the next generation.",
-    tone: "orange",
-    featured: true,
-    logo: "/arenas/7ouma-arena.png",
-  },
-];
+  arenas,
+  games,
+  getGameForItem,
+  scrims,
+  tournaments,
+} from "@/data/catalog";
 
 // Section 06 / REWARDS BAY icons: colored 3D renders from 3dicons.co (CC0 license).
 // The files live in `client/public/icons/gifts/` and are resolved through
@@ -435,28 +106,6 @@ function GiftIcon({
   );
 }
 
-function ActionButton({
-  children,
-  onClick,
-  variant = "primary",
-  icon = true,
-}: {
-  children: React.ReactNode;
-  onClick?: () => void;
-  variant?: "primary" | "ghost" | "dark";
-  icon?: boolean;
-}) {
-  return (
-    <button
-      className={`action-button action-button--${variant}`}
-      onClick={onClick}
-    >
-      {children}
-      {icon && <ArrowRight size={15} />}
-    </button>
-  );
-}
-
 function SectionHeader({
   eyebrow,
   title,
@@ -490,19 +139,10 @@ function SectionHeader({
 }
 
 export default function Home() {
-  const [activeNav, setActiveNav] = useState("Lobby");
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [, navigate] = useLocation();
   const [gameFilter, setGameFilter] = useState("All games");
   const [mode, setMode] = useState<"tournaments" | "scrims">("tournaments");
-  const [notice, setNotice] = useState("");
-
-  // Modals & Authentication State
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [loginOpen, setLoginOpen] = useState(false);
-  const [registerOpen, setRegisterOpen] = useState(false);
-  const [user, setUser] = useState<UserProfile | null>(null);
-  const [profileOpen, setProfileOpen] = useState(false);
-  const { theme, toggleTheme } = useTheme();
+  const { notify } = useToast();
 
   const filteredMatches = useMemo(() => {
     const list = mode === "tournaments" ? tournaments : scrims;
@@ -527,40 +167,31 @@ export default function Home() {
   }, [mode, gameFilter]);
 
   const totalStadiumCount = `${String(filteredMatches.length).padStart(2, "0")} TOTAL`;
-  const notify = (message: string) => {
-    setNotice(message);
-    window.setTimeout(() => setNotice(""), 2600);
-  };
 
-  // Listen to global shortcut (Cmd+K / Ctrl+K) for search
+  // Handle URL params: ?game=Free Fire (pre-filter from a catalog card) and
+  // ?jump=tournaments|arenas (deep links from the shell / search dialog).
   useEffect(() => {
-    const handleGlobalKey = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
-        e.preventDefault();
-        setSearchOpen(prev => !prev);
-      }
-    };
-    window.addEventListener("keydown", handleGlobalKey);
-    return () => window.removeEventListener("keydown", handleGlobalKey);
-  }, []);
-
-  // Handle URL paths / hash for deep linking to login or register
-  useEffect(() => {
-    const path = window.location.pathname;
-    const hash = window.location.hash;
-    const search = window.location.search;
-    if (
-      path.includes("/login") ||
-      hash.includes("login") ||
-      search.includes("login")
-    ) {
-      setLoginOpen(true);
-    } else if (
-      path.includes("/register") ||
-      hash.includes("register") ||
-      search.includes("register")
-    ) {
-      setRegisterOpen(true);
+    const params = new URLSearchParams(window.location.search);
+    const game = params.get("game");
+    const jump = params.get("jump");
+    if (game) {
+      const found = games.find(
+        g => g.name.toLowerCase() === game.toLowerCase()
+      );
+      if (found) setGameFilter(found.name);
+    }
+    if (game || jump === "tournaments") {
+      window.setTimeout(() => {
+        document
+          .getElementById("tournaments")
+          ?.scrollIntoView({ behavior: "smooth" });
+      }, 300);
+    } else if (jump === "arenas") {
+      window.setTimeout(() => {
+        document
+          .querySelector(".arena-section")
+          ?.scrollIntoView({ behavior: "smooth" });
+      }, 300);
     }
   }, []);
 
@@ -594,230 +225,7 @@ export default function Home() {
   };
 
   return (
-    <div className="app-shell">
-      <header className="topbar">
-        {/* Brand Logo — symbol only, no wordmark */}
-        <a className="brand" href="#top" onClick={() => setActiveNav("Lobby")}>
-          <BrandMark size="lg" />
-        </a>
-
-        {/* Center Navigation Links */}
-        <nav className={mobileOpen ? "main-nav main-nav--open" : "main-nav"}>
-          {[
-            { label: "Lobby", icon: LayoutGrid },
-            { label: "Stadium", icon: Trophy },
-            { label: "Board", icon: Swords },
-            { label: "Store", icon: CircleDollarSign },
-            { label: "Feed", icon: Radio },
-          ].map(({ label, icon: Icon }) => (
-            <button
-              key={label}
-              className={
-                activeNav === label ? "nav-item nav-item--active" : "nav-item"
-              }
-              onClick={() => {
-                setActiveNav(label);
-                setMobileOpen(false);
-                notify(`${label} preview coming soon`);
-              }}
-            >
-              <Icon size={15} />
-              {label}
-            </button>
-          ))}
-
-          {/* Mobile menu action buttons */}
-          <div className="mobile-nav-actions">
-            <button
-              className="mobile-search-btn"
-              onClick={() => {
-                setMobileOpen(false);
-                setSearchOpen(true);
-              }}
-            >
-              <Search size={16} />
-              <span>Search Tournaments & Games</span>
-            </button>
-            {!user ? (
-              <div className="mobile-auth-row">
-                <button
-                  className="mobile-login-btn"
-                  onClick={() => {
-                    setMobileOpen(false);
-                    setLoginOpen(true);
-                  }}
-                >
-                  Log In
-                </button>
-                <button
-                  className="mobile-register-btn"
-                  onClick={() => {
-                    setMobileOpen(false);
-                    setRegisterOpen(true);
-                  }}
-                >
-                  Register
-                </button>
-              </div>
-            ) : (
-              <button
-                className="profile-logout-btn"
-                onClick={() => {
-                  setUser(null);
-                  setMobileOpen(false);
-                  notify("Logged out successfully");
-                }}
-              >
-                <LogOut size={13} />
-                <span>LOG OUT ({user.name})</span>
-              </button>
-            )}
-          </div>
-        </nav>
-
-        {/* Top Right Action Buttons: Search, Log in, Register
-            (hidden on mobile while the drawer is open — the drawer has its own set) */}
-        <div
-          className={
-            mobileOpen ? "top-actions top-actions--menu-open" : "top-actions"
-          }
-        >
-          {/* Light / Dark Theme Toggle */}
-          <button
-            className="top-theme-btn"
-            onClick={toggleTheme}
-            aria-label={
-              theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
-            }
-            title={theme === "dark" ? "Light mode" : "Dark mode"}
-          >
-            {theme === "dark" ? <Sun size={15} /> : <Moon size={15} />}
-          </button>
-
-          {/* Search Button */}
-          <button
-            className="top-search-btn"
-            onClick={() => setSearchOpen(true)}
-            aria-label="Search"
-            title="Search (⌘K)"
-          >
-            <Search size={15} />
-            <span className="search-text">Search</span>
-            <kbd className="top-search-kbd">⌘K</kbd>
-          </button>
-
-          {user ? (
-            /* Authenticated User View */
-            <>
-              <button
-                className="icon-button"
-                onClick={() => notify("No new alerts right now")}
-                aria-label="Notifications"
-              >
-                <Bell size={17} />
-                <i />
-              </button>
-              <div className="profile-menu-container">
-                <button
-                  className="profile-button"
-                  onClick={() => setProfileOpen(!profileOpen)}
-                  aria-expanded={profileOpen}
-                >
-                  <span className="avatar">{user.name.slice(0, 2)}</span>
-                  <span className="profile-name">{user.name}</span>
-                  <ChevronDown size={14} />
-                </button>
-                {profileOpen && (
-                  <div className="profile-dropdown">
-                    <div className="profile-dropdown-head">
-                      <span className="avatar">{user.name.slice(0, 2)}</span>
-                      <div className="profile-dropdown-info">
-                        <strong>{user.name}</strong>
-                        <span>
-                          {user.rank} · {user.tag}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="profile-dropdown-stats">
-                      <div>
-                        <span>XP</span>
-                        <strong>{user.xp}</strong>
-                      </div>
-                      <div>
-                        <span>TOURNAMENTS</span>
-                        <strong>{user.tournamentsCount} ACTIVE</strong>
-                      </div>
-                    </div>
-                    <div className="profile-dropdown-items">
-                      <button
-                        className="profile-dropdown-item"
-                        onClick={() => {
-                          setProfileOpen(false);
-                          document
-                            .getElementById("tournaments")
-                            ?.scrollIntoView({ behavior: "smooth" });
-                        }}
-                      >
-                        <span>My Tournaments</span>
-                        <ChevronRight size={13} />
-                      </button>
-                      <button
-                        className="profile-dropdown-item"
-                        onClick={() => {
-                          setProfileOpen(false);
-                          notify("Arena manager opening soon");
-                        }}
-                      >
-                        <span>Arena Management</span>
-                        <ChevronRight size={13} />
-                      </button>
-                    </div>
-                    <button
-                      className="profile-logout-btn"
-                      onClick={() => {
-                        setUser(null);
-                        setProfileOpen(false);
-                        notify("Logged out successfully");
-                      }}
-                    >
-                      <LogOut size={13} />
-                      <span>LOG OUT</span>
-                    </button>
-                  </div>
-                )}
-              </div>
-            </>
-          ) : (
-            /* Unauthenticated Visitor View: Log in & Register */
-            <>
-              <button
-                className="top-login-btn"
-                onClick={() => setLoginOpen(true)}
-                aria-label="Log in"
-              >
-                Log in
-              </button>
-              <button
-                className="top-register-btn"
-                onClick={() => setRegisterOpen(true)}
-                aria-label="Register"
-              >
-                Register
-              </button>
-            </>
-          )}
-        </div>
-
-        {/* Mobile menu toggle */}
-        <button
-          className="mobile-toggle"
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Toggle menu"
-        >
-          {mobileOpen ? <X size={22} /> : <Menu size={22} />}
-        </button>
-      </header>
-
+    <AppShell onSearchSelect={handleSearchSelect}>
       <main id="top">
         <section
           className="hero-section"
@@ -868,15 +276,28 @@ export default function Home() {
             </div>
             <aside className="hero-live-panel" aria-label="Live match feed">
               <div className="hero-live-head">
-                <span><span className="status-dot" /> LIVE FEED</span>
+                <span>
+                  <span className="status-dot" /> LIVE FEED
+                </span>
                 <span className="hero-live-code">EGOR / 001</span>
               </div>
               <div className="hero-live-match">
                 <span className="eyebrow">NOW PLAYING · FREE FIRE</span>
                 <strong>REFUGE ACADEMY SCRIM</strong>
-                <div className="hero-live-meta"><span>12 / 16 TEAMS</span><span>LIVE NOW</span></div>
+                <div className="hero-live-meta">
+                  <span>12 / 16 TEAMS</span>
+                  <span>LIVE NOW</span>
+                </div>
               </div>
-              <button className="hero-live-link" onClick={() => { setMode("scrims"); document.getElementById("tournaments")?.scrollIntoView({ behavior: "smooth" }); }}>
+              <button
+                className="hero-live-link"
+                onClick={() => {
+                  setMode("scrims");
+                  document
+                    .getElementById("tournaments")
+                    ?.scrollIntoView({ behavior: "smooth" });
+                }}
+              >
                 Enter the stadium <ArrowRight size={14} />
               </button>
             </aside>
@@ -921,13 +342,8 @@ export default function Home() {
             eyebrow="02 / SELECT YOUR LOADOUT"
             title="GAMES"
             count="16 TOTAL"
-            action={
-              gameFilter !== "All games" ? "Show all games" : "See all games"
-            }
-            onAction={() => {
-              setGameFilter("All games");
-              notify("Showing all matches");
-            }}
+            action="See all games"
+            onAction={() => navigate("/games")}
           />
           <div className="game-grid">
             {games.map(game => {
@@ -1433,83 +849,6 @@ export default function Home() {
           </div>
         </section>
       </main>
-
-      <footer className="footer">
-        <div className="container footer-inner">
-          <div className="footer-brand">
-            <a className="brand" href="#top">
-              <BrandLockup />
-            </a>
-            <p>
-              Built for competitive gamers
-              <br />
-              worldwide.
-            </p>
-          </div>
-          <div className="footer-links">
-            <span onClick={() => notify("FAQ section coming soon")}>FAQ</span>
-            <a
-              href="https://egorgaming.com/terms"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ color: "inherit" }}
-            >
-              Terms &amp; Privacy
-            </a>
-            <span onClick={() => notify("Contact: contact@egorgaming.com")}>
-              Contact
-            </span>
-          </div>
-          <div className="footer-end">
-            <span>© 2026 EGOR GAMING</span>
-            <span>ALGIERS / DZ</span>
-          </div>
-        </div>
-      </footer>
-
-      {notice && (
-        <div className="toast">
-          <span className="status-dot" /> {notice}
-        </div>
-      )}
-
-      {/* Interactive Search Modal */}
-      <SearchDialog
-        isOpen={searchOpen}
-        onClose={() => setSearchOpen(false)}
-        onSelect={handleSearchSelect}
-        games={games}
-        tournaments={tournaments}
-        arenas={arenas}
-      />
-
-      {/* Interactive Login Modal */}
-      <LoginModal
-        isOpen={loginOpen}
-        onClose={() => setLoginOpen(false)}
-        onSwitchToRegister={() => {
-          setLoginOpen(false);
-          setRegisterOpen(true);
-        }}
-        onSuccess={u => {
-          setUser(u);
-        }}
-        notify={notify}
-      />
-
-      {/* Interactive Register Modal */}
-      <RegisterModal
-        isOpen={registerOpen}
-        onClose={() => setRegisterOpen(false)}
-        onSwitchToLogin={() => {
-          setRegisterOpen(false);
-          setLoginOpen(true);
-        }}
-        onSuccess={u => {
-          setUser(u);
-        }}
-        notify={notify}
-      />
-    </div>
+    </AppShell>
   );
 }
