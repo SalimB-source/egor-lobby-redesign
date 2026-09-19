@@ -4138,19 +4138,26 @@ html:not(.dark) .egor-checkbox-label input:checked + .egor-custom-check {
 }
 
 /* ---- Poster grid: the lobby game card, scaled up ----
-   The cards reuse the `game-card` class (tones, hover glow, badges, corner
+   Two big posters per row: at 2-up the official artwork actually reads, so
+   the cards stay large instead of shrinking into a 3-up thumbnail wall. The
+   cards reuse the `game-card` class (tones, hover glow, badges, corner
    accent, light-theme pins) and only override the size + the stats row. */
 .catalog-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
   margin-top: 22px;
 }
 
 .catalog-card {
   aspect-ratio: auto;
-  min-height: 430px;
-  padding: 16px;
+  min-height: 470px;
+  padding: 18px;
+}
+
+/* Wider canvas, louder type: the poster copy scales with the card. */
+.catalog-card .game-card-title {
+  font: 700 clamp(20px, 2vw, 28px) / 1.06 var(--display);
 }
 
 .catalog-stats {
@@ -4158,6 +4165,11 @@ html:not(.dark) .egor-checkbox-label input:checked + .egor-custom-check {
   align-items: flex-end;
   gap: 22px;
   margin-top: 12px;
+}
+
+.catalog-card .catalog-stats {
+  gap: 32px;
+  margin-top: 14px;
 }
 
 .catalog-stats > span {
@@ -4173,10 +4185,18 @@ html:not(.dark) .egor-checkbox-label input:checked + .egor-custom-check {
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.7);
 }
 
+.catalog-card .catalog-stats strong {
+  font-size: 22px;
+}
+
 .catalog-stats small {
   color: rgba(244, 241, 241, 0.55);
   font: 500 7.5px var(--mono);
   letter-spacing: 0.14em;
+}
+
+.catalog-card .catalog-stats small {
+  font-size: 8.5px;
 }
 
 /* Replaces the plain live-player pill when the title has a match in play. */
@@ -4492,13 +4512,14 @@ html .catalog-cta .action-button--ghost:hover {
 }
 
 /* ---- Responsive ---- */
+/* The grid is 2-up from the widest viewport down; below 1050px the cards just
+   get tighter, and phones below 480px drop to a single full-bleed poster. */
 @media (max-width: 1050px) {
   .catalog-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 14px;
   }
   .catalog-card {
-    min-height: 390px;
+    min-height: 420px;
   }
   .incoming-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
