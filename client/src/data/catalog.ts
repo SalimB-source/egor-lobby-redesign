@@ -403,13 +403,18 @@ export const gameEventCounts = (
   scrims: scrims.filter(m => matchBelongsToGame(m, game)).length,
 });
 
-/** Titles confirmed for the platform but not live yet (locked catalog tiles). */
+/**
+ * Titles confirmed for the platform but not live yet (locked catalog tiles).
+ * `image` points at the title's official key art in `client/public/games/`,
+ * printed grayscale behind the locked tile.
+ */
 export const incomingGames: {
   name: string;
   short: string;
   tone: string;
   genre: string;
   icon: string;
+  image: string;
   window: string;
 }[] = [
   {
@@ -418,6 +423,7 @@ export const incomingGames: {
     tone: "red",
     genre: "Tactical FPS",
     icon: "⌖",
+    image: "games/valorant.jpg",
     window: "Q4 2026",
   },
   {
@@ -426,6 +432,7 @@ export const incomingGames: {
     tone: "cyan",
     genre: "Battle Royale",
     icon: "▣",
+    image: "games/fortnite.jpg",
     window: "Q4 2026",
   },
   {
@@ -434,6 +441,7 @@ export const incomingGames: {
     tone: "orange",
     genre: "MOBA 3v3",
     icon: "✷",
+    image: "games/brawl-stars.jpg",
     window: "Q1 2027",
   },
   {
@@ -442,6 +450,7 @@ export const incomingGames: {
     tone: "blue",
     genre: "Sports 3v3",
     icon: "◉",
+    image: "games/rocket-league.jpg",
     window: "Q1 2027",
   },
   {
@@ -450,6 +459,7 @@ export const incomingGames: {
     tone: "violet",
     genre: "Fighting 1v1",
     icon: "⚔",
+    image: "games/tekken-8.jpg",
     window: "Q2 2027",
   },
   {
@@ -458,6 +468,7 @@ export const incomingGames: {
     tone: "lime",
     genre: "Sports 11v11",
     icon: "⬢",
+    image: "games/ea-sports-fc.jpg",
     window: "Q2 2027",
   },
 ];

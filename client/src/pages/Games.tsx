@@ -423,6 +423,16 @@ export default function Games() {
                 key={g.name}
                 className={`incoming-card game-card--${g.tone}`}
               >
+                {/* Official key art, printed grayscale: the tile is locked */}
+                <div className="incoming-card-media" aria-hidden="true">
+                  <img
+                    src={`${import.meta.env.BASE_URL}${g.image}`}
+                    alt=""
+                    className="incoming-card-thumb"
+                    loading="lazy"
+                  />
+                  <div className="incoming-card-overlay" />
+                </div>
                 <div className="incoming-card-top">
                   <span className="game-tag-badge">{g.short}</span>
                   <span className="incoming-window">
