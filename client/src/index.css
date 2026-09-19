@@ -4155,9 +4155,11 @@ html:not(.dark) .egor-checkbox-label input:checked + .egor-custom-check {
   padding: 18px;
 }
 
-/* Wider canvas, louder type: the poster copy scales with the card. */
+/* Wider canvas, louder type: the poster copy scales with the card. Every
+   bumped value is a clamp so the two-up cards stay readable-but-fitting when
+   the viewport — and with it each column — shrinks. */
 .catalog-card .game-card-title {
-  font: 700 clamp(20px, 2vw, 28px) / 1.06 var(--display);
+  font: 700 clamp(18px, 2vw, 28px) / 1.06 var(--display);
 }
 
 .catalog-stats {
@@ -4168,7 +4170,7 @@ html:not(.dark) .egor-checkbox-label input:checked + .egor-custom-check {
 }
 
 .catalog-card .catalog-stats {
-  gap: 32px;
+  gap: clamp(18px, 2.6vw, 32px);
   margin-top: 14px;
 }
 
@@ -4186,7 +4188,7 @@ html:not(.dark) .egor-checkbox-label input:checked + .egor-custom-check {
 }
 
 .catalog-card .catalog-stats strong {
-  font-size: 22px;
+  font-size: clamp(18px, 1.6vw, 22px);
 }
 
 .catalog-stats small {
@@ -4196,7 +4198,7 @@ html:not(.dark) .egor-checkbox-label input:checked + .egor-custom-check {
 }
 
 .catalog-card .catalog-stats small {
-  font-size: 8.5px;
+  font-size: clamp(7.5px, 0.72vw, 8.5px);
 }
 
 /* Replaces the plain live-player pill when the title has a match in play. */
@@ -4519,7 +4521,7 @@ html .catalog-cta .action-button--ghost:hover {
     gap: 14px;
   }
   .catalog-card {
-    min-height: 420px;
+    min-height: 400px;
   }
   .incoming-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
