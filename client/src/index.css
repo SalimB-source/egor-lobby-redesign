@@ -4138,14 +4138,13 @@ html:not(.dark) .egor-checkbox-label input:checked + .egor-custom-check {
 }
 
 /* ---- Poster grid: the lobby game card, scaled up ----
-   Two big posters per row: at 2-up the official artwork actually reads, so
-   the cards stay large instead of shrinking into a 3-up thumbnail wall. The
+   Six-poster wall on desktop, three at tablet width, two on phones. The
    cards reuse the `game-card` class (tones, hover glow, badges, corner
    accent, light-theme pins) and only override the size + the stats row. */
 .catalog-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 14px;
   margin-top: 22px;
 }
 
@@ -4153,13 +4152,16 @@ html:not(.dark) .egor-checkbox-label input:checked + .egor-custom-check {
   aspect-ratio: auto;
   min-height: 470px;
   padding: 18px;
+  /* Interior type is sized in cqw so it tracks the column width, which is
+     what shrinks — not the viewport (the container is capped at 1180px). */
+  container-type: inline-size;
 }
 
-/* Wider canvas, louder type: the poster copy scales with the card. Every
-   bumped value is a clamp so the two-up cards stay readable-but-fitting when
-   the viewport — and with it each column — shrinks. */
+/* Narrower canvas at 6-up: the poster copy scales with the column itself.
+   cqw units track the card width, so titles stay readable-but-fitting from
+   the widest desktop down to a 2-up phone grid. */
 .catalog-card .game-card-title {
-  font: 700 clamp(18px, 2vw, 28px) / 1.06 var(--display);
+  font: 700 clamp(14px, 9.5cqw, 22px) / 1.08 var(--display);
 }
 
 .catalog-stats {
@@ -4169,8 +4171,13 @@ html:not(.dark) .egor-checkbox-label input:checked + .egor-custom-check {
   margin-top: 12px;
 }
 
+/* Narrow 6-up columns: pack the three stats into tight grid columns so the
+   long labels never spill out of the card. */
 .catalog-card .catalog-stats {
-  gap: clamp(18px, 2.6vw, 32px);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: end;
+  gap: 6px;
   margin-top: 14px;
 }
 
@@ -4178,6 +4185,7 @@ html:not(.dark) .egor-checkbox-label input:checked + .egor-custom-check {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  min-width: 0;
 }
 
 .catalog-stats strong {
@@ -4188,7 +4196,7 @@ html:not(.dark) .egor-checkbox-label input:checked + .egor-custom-check {
 }
 
 .catalog-card .catalog-stats strong {
-  font-size: clamp(18px, 1.6vw, 22px);
+  font-size: clamp(12px, 7.5cqw, 20px);
 }
 
 .catalog-stats small {
@@ -4198,7 +4206,8 @@ html:not(.dark) .egor-checkbox-label input:checked + .egor-custom-check {
 }
 
 .catalog-card .catalog-stats small {
-  font-size: clamp(7.5px, 0.72vw, 8.5px);
+  font-size: clamp(5px, 3cqw, 8px);
+  letter-spacing: 0.06em;
 }
 
 /* Replaces the plain live-player pill when the title has a match in play. */
@@ -4514,10 +4523,11 @@ html .catalog-cta .action-button--ghost:hover {
 }
 
 /* ---- Responsive ---- */
-/* The grid is 2-up from the widest viewport down; below 1050px the cards just
-   get tighter, and phones below 480px drop to a single full-bleed poster. */
+/* The grid is 6-up from the widest viewport down: three posters per row at
+   tablet width, two on phones. */
 @media (max-width: 1050px) {
   .catalog-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 14px;
   }
   .catalog-card {
@@ -4535,6 +4545,10 @@ html .catalog-cta .action-button--ghost:hover {
 @media (max-width: 760px) {
   .games-hero {
     min-height: 560px;
+  }
+  /* Phones: two posters per row. */
+  .catalog-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .catalog-toolbar {
     flex-direction: column;
@@ -4574,16 +4588,11 @@ html .catalog-cta .action-button--ghost:hover {
 }
 
 @media (max-width: 480px) {
-  .catalog-grid {
-    grid-template-columns: 1fr;
-  }
+  /* Small phones keep the 2-up poster grid. */
   .catalog-card {
     min-height: 350px;
   }
   .incoming-grid {
     grid-template-columns: 1fr;
-  }
-  .catalog-stats {
-    gap: 16px;
   }
 }
