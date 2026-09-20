@@ -230,15 +230,22 @@ export default function Home() {
   return (
     <AppShell onSearchSelect={handleSearchSelect}>
       <main id="top">
-        <section
-          className="hero-section"
-          style={
-            {
-              "--hero-image": `url(${import.meta.env.BASE_URL}egor-lobby-hero-red.jpg)`,
-            } as CSSProperties
-          }
-        >
-          <div className="hero-image" />
+        <section className="hero-section">
+          <div className="hero-image hero-image--video" aria-hidden="true">
+            <video
+              className="hero-video"
+              autoPlay
+              muted
+              loop
+              playsInline
+              poster={assetUrl("/media/egor-hero-poster.jpg")}
+            >
+              <source
+                src={assetUrl("/media/egor-hero.mp4")}
+                type="video/mp4"
+              />
+            </video>
+          </div>
           <div className="hero-grid" />
           <div className="hero-content container">
             <div className="hero-kicker">
