@@ -158,7 +158,7 @@ export function AppShell({
               }
               onClick={() => handleNav(label)}
             >
-              <Icon size={15} />
+              <Icon size={17} />
               {label}
             </button>
           ))}
