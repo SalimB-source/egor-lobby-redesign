@@ -230,7 +230,7 @@ export default function Home() {
   return (
     <AppShell onSearchSelect={handleSearchSelect}>
       <main id="top">
-        <section className="hero-section">
+        <section className="hero-section lobby-hero">
           <div className="hero-image hero-image--video" aria-hidden="true">
             <video
               className="hero-video"

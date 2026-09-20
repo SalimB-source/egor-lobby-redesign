@@ -544,6 +544,10 @@ a {
   margin-top: 90px;
   margin-bottom: 48px;
 }
+/* Section 01 / Lobby: keep the transition into the signal strip compact. */
+.lobby-hero .hero-readout {
+  margin-bottom: 20px;
+}
 .hero-readout > div {
   display: flex;
   flex-direction: column;
@@ -1518,6 +1522,12 @@ html:not(.dark) .gift-card:hover {
   }
   .hero-content {
     padding-bottom: 64px;
+  }
+  .lobby-hero .hero-content {
+    padding-bottom: 32px;
+  }
+  .lobby-hero .hero-readout {
+    margin-bottom: 0;
   }
   .hero-kicker {
     font-size: 8px;
