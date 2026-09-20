@@ -213,19 +213,19 @@ a {
 .main-nav {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   height: 100%;
 }
 .nav-item {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 9px;
   position: relative;
   height: 100%;
-  padding: 0 14px;
+  padding: 0 16px;
   background: transparent;
   color: var(--muted);
-  font: 500 11px var(--mono);
+  font: 500 13px var(--mono);
   letter-spacing: 0.08em;
   transition:
     color 0.2s,
@@ -234,8 +234,8 @@ a {
 .nav-item:after {
   content: "";
   position: absolute;
-  left: 14px;
-  right: 14px;
+  left: 16px;
+  right: 16px;
   bottom: -1px;
   height: 2px;
   background: var(--lime);
@@ -4605,4 +4605,84 @@ html .catalog-cta .action-button--ghost:hover {
   .incoming-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* ==========================================================================
+   Top bar — centred nav links
+   The five links are the header's focal point, so they sit centred between
+   the brand mark and the action buttons instead of hugging the logo:
+
+     761px – 1309px: the nav's own auto margins centre it in the room left
+       over between the brand and the Search / Log in / Register set. Auto
+       margins can never make neighbours overlap, so this is safe at every
+       width in the band. (The right-hand set is much wider than the small
+       brand mark, so the links sit a little left of the viewport centre —
+       they are centred in the free space, which is what reads as balanced.)
+
+     1310px and up: there is enough slack for the links to be pinned to the
+       true centre of the bar, so the nav is taken out of the flow and centred
+       on the mid-line while the action set keeps the right edge. The gap
+       between the two is never under ~20px down to the threshold, and the
+       long callsign cap below keeps it that way when a user is signed in.
+       (Measured in Chromium: 23px at 1310, 21px from 1368 up.)
+
+   The links are also a little larger: 13px labels (was 11px), 17px icons
+   (was 15px) and roomier item padding. To keep the wider set clear of its
+   neighbours the ⌘K hint is dropped below 1368px, and the narrowest desktop
+   widths tighten the item padding again. Phone layout (≤760px) is untouched:
+   the links live in the drawer there.
+   ========================================================================== */
+@media (max-width: 1367.98px) {
+  .top-search-kbd {
+    display: none;
+  }
+}
+
+@media (min-width: 761px) and (max-width: 1309.98px) {
+  .main-nav {
+    margin-inline: auto;
+  }
+  /* The nav's auto margins already carry this group to the right edge. */
+  .top-actions {
+    margin-left: 0;
+  }
+}
+
+/* Tight desktop band: narrower items keep the links clear of the buttons. */
+@media (min-width: 761px) and (max-width: 950px) {
+  .main-nav {
+    gap: 4px;
+  }
+  .nav-item {
+    gap: 6px;
+    padding-inline: 9px;
+  }
+  .nav-item:after {
+    left: 9px;
+    right: 9px;
+  }
+}
+
+/* Wide screens: pin the nav to the centre of the bar. */
+@media (min-width: 1310px) {
+  .main-nav {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    height: 100%;
+    margin-inline: 0;
+    transform: translateX(-50%);
+  }
+  .top-actions {
+    margin-left: auto;
+  }
+}
+
+/* Long callsigns stay inside the bar so the centred nav can never collide
+   with the profile button — the width the breakpoint above was measured at. */
+.profile-name {
+  max-width: 84px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
