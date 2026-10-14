@@ -36,8 +36,9 @@ const NAV_ITEMS = [
 ];
 
 /**
- * The chrome every EGOR page shares: the fixed topbar (brand, nav, search,
- * auth), the ⌘K search dialog, the login/register modals and the footer.
+ * The chrome every EGOR page shares: the fixed topbar (brand, search, auth),
+ * the left navigation rail (Lobby / Stadium / Board / Store / Feed), the ⌘K
+ * search dialog, the login/register modals and the footer.
  *
  * Pages render their own <main> as `children` and may pass:
  *  - `onSearchSelect` — page-specific handling of a search-dialog pick
@@ -148,70 +149,6 @@ export function AppShell({
           <BrandMark size="lg" />
         </a>
 
-        {/* Center Navigation Links */}
-        <nav className={mobileOpen ? "main-nav main-nav--open" : "main-nav"}>
-          {NAV_ITEMS.map(({ label, icon: Icon }) => (
-            <button
-              key={label}
-              className={
-                active === label ? "nav-item nav-item--active" : "nav-item"
-              }
-              onClick={() => handleNav(label)}
-            >
-              <Icon size={17} />
-              {label}
-            </button>
-          ))}
-
-          {/* Mobile menu action buttons */}
-          <div className="mobile-nav-actions">
-            <button
-              className="mobile-search-btn"
-              onClick={() => {
-                setMobileOpen(false);
-                setSearchOpen(true);
-              }}
-            >
-              <Search size={16} />
-              <span>Search Tournaments & Games</span>
-            </button>
-            {!user ? (
-              <div className="mobile-auth-row">
-                <button
-                  className="mobile-login-btn"
-                  onClick={() => {
-                    setMobileOpen(false);
-                    setLoginOpen(true);
-                  }}
-                >
-                  Log In
-                </button>
-                <button
-                  className="mobile-register-btn"
-                  onClick={() => {
-                    setMobileOpen(false);
-                    setRegisterOpen(true);
-                  }}
-                >
-                  Register
-                </button>
-              </div>
-            ) : (
-              <button
-                className="profile-logout-btn"
-                onClick={() => {
-                  setUser(null);
-                  setMobileOpen(false);
-                  notify("Logged out successfully");
-                }}
-              >
-                <LogOut size={13} />
-                <span>LOG OUT ({user.name})</span>
-              </button>
-            )}
-          </div>
-        </nav>
-
         {/* Top Right Action Buttons: Search, Log in, Register
             (hidden on mobile while the drawer is open — the drawer has its own set) */}
         <div
@@ -219,18 +156,6 @@ export function AppShell({
             mobileOpen ? "top-actions top-actions--menu-open" : "top-actions"
           }
         >
-          {/* Light / Dark Theme Toggle */}
-          <button
-            className="top-theme-btn"
-            onClick={toggleTheme}
-            aria-label={
-              theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
-            }
-            title={theme === "dark" ? "Light mode" : "Dark mode"}
-          >
-            {theme === "dark" ? <Sun size={15} /> : <Moon size={15} />}
-          </button>
-
           {/* Search Button */}
           <button
             className="top-search-btn"
@@ -238,7 +163,7 @@ export function AppShell({
             aria-label="Search"
             title="Search (⌘K)"
           >
-            <Search size={15} />
+            <Search size={17} />
             <span className="search-text">Search</span>
             <kbd className="top-search-kbd">⌘K</kbd>
           </button>
@@ -352,6 +277,136 @@ export function AppShell({
           {mobileOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
       </header>
+
+      {/* ------------------------------------------------------------------
+          Left navigation rail
+
+          The five primary links used to sit in the top bar; they now live in
+          a vertical sidebar pinned to the left edge, as a column of large
+          icon tiles (26px icon + label underneath). The light/dark toggle
+          moved down here too, so the rail reads as the app's own chrome.
+
+          Phones reuse the exact same rail as the menu drawer: it slides in
+          from the left (see `.side-rail` in index.css), gains a brand header
+          and its own Search / Log in / Register set, and a scrim closes it.
+      ------------------------------------------------------------------ */}
+      <aside
+        className={mobileOpen ? "side-rail side-rail--open" : "side-rail"}
+        aria-label="Primary navigation"
+      >
+        {/* Drawer header — phones only (the brand already sits in the top bar) */}
+        <div className="side-rail-head">
+          <a
+            className="brand"
+            href="/"
+            onClick={e => {
+              e.preventDefault();
+              goHome();
+            }}
+          >
+            <BrandMark size="lg" />
+          </a>
+          <button
+            className="side-rail-close"
+            onClick={() => setMobileOpen(false)}
+            aria-label="Close menu"
+          >
+            <X size={22} />
+          </button>
+        </div>
+
+        <nav className="side-rail-nav">
+          {NAV_ITEMS.map(({ label, icon: Icon }) => (
+            <button
+              key={label}
+              className={
+                active === label
+                  ? "nav-item nav-item--side nav-item--active"
+                  : "nav-item nav-item--side"
+              }
+              onClick={() => handleNav(label)}
+              aria-current={active === label ? "page" : undefined}
+            >
+              <Icon size={26} />
+              <span className="nav-item-label">{label}</span>
+            </button>
+          ))}
+        </nav>
+
+        <div className="side-rail-foot">
+          {/* Drawer action buttons — phones only */}
+          <div className="mobile-nav-actions">
+            <button
+              className="mobile-search-btn"
+              onClick={() => {
+                setMobileOpen(false);
+                setSearchOpen(true);
+              }}
+            >
+              <Search size={18} />
+              <span>Search Tournaments &amp; Games</span>
+            </button>
+            {!user ? (
+              <div className="mobile-auth-row">
+                <button
+                  className="mobile-login-btn"
+                  onClick={() => {
+                    setMobileOpen(false);
+                    setLoginOpen(true);
+                  }}
+                >
+                  Log In
+                </button>
+                <button
+                  className="mobile-register-btn"
+                  onClick={() => {
+                    setMobileOpen(false);
+                    setRegisterOpen(true);
+                  }}
+                >
+                  Register
+                </button>
+              </div>
+            ) : (
+              <button
+                className="profile-logout-btn"
+                onClick={() => {
+                  setUser(null);
+                  setMobileOpen(false);
+                  notify("Logged out successfully");
+                }}
+              >
+                <LogOut size={13} />
+                <span>LOG OUT ({user.name})</span>
+              </button>
+            )}
+          </div>
+
+          {/* Light / Dark Theme Toggle */}
+          <button
+            className="side-rail-theme"
+            onClick={toggleTheme}
+            aria-label={
+              theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+            }
+            title={theme === "dark" ? "Light mode" : "Dark mode"}
+          >
+            {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
+            <span className="side-rail-theme-label">
+              {theme === "dark" ? "Light mode" : "Dark mode"}
+            </span>
+          </button>
+        </div>
+      </aside>
+
+      {/* Scrim behind the phone drawer — tap anywhere to close */}
+      {mobileOpen && (
+        <div
+          className="side-rail-scrim"
+          onClick={() => setMobileOpen(false)}
+          aria-hidden="true"
+        />
+      )}
 
       {children}
 
