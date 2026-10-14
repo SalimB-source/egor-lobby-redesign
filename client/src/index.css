@@ -256,9 +256,13 @@ a {
    viewport. The top bar keeps the brand, search and auth; the shell is
    padded by the rail's width so nothing ever slides underneath it.
 
+   The rail itself is transparent: no panel fill, no divider line, so the
+   icons float over the page. Only the tiles carry a tint (hover / active),
+   and a soft shadow keeps the labels legible over busy imagery.
+
    Phones reuse this same element as the menu drawer (see the ≤760px block
-   further down): it slides in from the left, grows a brand header and its
-   own Search / Log in / Register set, and a scrim closes it.
+   further down): it slides in from the left, grows a brand header, its own
+   Search / Log in / Register set and an opaque panel, and a scrim closes it.
    ========================================================================== */
 .side-rail {
   position: fixed;
@@ -271,9 +275,7 @@ a {
   flex-direction: column;
   align-items: center;
   padding: 22px 0 20px;
-  background: rgba(8, 11, 16, 0.86);
-  border-right: 1px solid var(--line);
-  backdrop-filter: blur(18px);
+  background: transparent;
   /* Phones: off-canvas until opened */
   visibility: hidden;
   transform: translateX(-100%);
@@ -318,6 +320,8 @@ a {
   font-size: 10px;
   letter-spacing: 0.13em;
   text-transform: uppercase;
+  /* Transparent rail — keep the labels readable over the hero video */
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.45);
 }
 .nav-item--side svg {
   width: 26px;
@@ -3774,9 +3778,8 @@ html:not(.dark) .mobile-search-btn {
   background: rgba(26, 20, 23, 0.05);
 }
 /* ---- Navigation rail (light mode) ---- */
-html:not(.dark) .side-rail {
-  background: rgba(255, 255, 255, 0.9);
-}
+/* No panel fill to override — the rail is transparent in both themes, so
+   only the tile tints need inverting. */
 html:not(.dark) .nav-item--side:hover {
   background: rgba(26, 20, 23, 0.05);
 }
