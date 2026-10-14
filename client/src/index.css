@@ -22,6 +22,8 @@
   --body: "Space Grotesk", sans-serif;
   --mono: "DM Mono", monospace;
   --ease: cubic-bezier(0.23, 1, 0.32, 1);
+  /* Width of the left navigation rail (sidebar) + the shell padding it needs */
+  --rail-width: 118px;
 }
 
 /* Dark theme — applied when <html> carries the .dark class. */
@@ -210,12 +212,8 @@ a {
   max-width: 210px;
   object-fit: contain;
 }
-.main-nav {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  height: 100%;
-}
+/* Nav tiles are styled as `.nav-item--side` further down (the left rail) —
+   this bare rule only sets the shared skeleton they all inherit. */
 .nav-item {
   display: inline-flex;
   align-items: center;
@@ -249,6 +247,162 @@ a {
 .nav-item--active:after {
   transform: scaleX(1);
 }
+
+/* ==========================================================================
+   Left navigation rail (sidebar)
+
+   The five primary links live here instead of the top bar: a column of large
+   icon tiles — 26px icon, label underneath — pinned to the left edge of the
+   viewport. The top bar keeps the brand, search and auth; the shell is
+   padded by the rail's width so nothing ever slides underneath it.
+
+   Phones reuse this same element as the menu drawer (see the ≤760px block
+   further down): it slides in from the left, grows a brand header and its
+   own Search / Log in / Register set, and a scrim closes it.
+   ========================================================================== */
+.side-rail {
+  position: fixed;
+  left: 0;
+  top: 78px; /* sits directly under the top bar */
+  bottom: 0;
+  z-index: 40;
+  width: var(--rail-width);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 22px 0 20px;
+  background: rgba(8, 11, 16, 0.86);
+  border-right: 1px solid var(--line);
+  backdrop-filter: blur(18px);
+  /* Phones: off-canvas until opened */
+  visibility: hidden;
+  transform: translateX(-100%);
+  transition:
+    transform 0.32s var(--ease),
+    visibility 0.32s;
+}
+.side-rail--open {
+  visibility: visible;
+  transform: none;
+}
+.side-rail-head {
+  display: none; /* desktop: the brand already sits in the top bar */
+}
+.side-rail-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  /* Auto margins centre the group in the room above the footer */
+  margin-block: auto;
+}
+.side-rail-foot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  margin-top: auto;
+}
+
+/* Nav tile: icon stacked over its label, active edge on the left */
+.nav-item--side {
+  flex-direction: column;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  height: auto;
+  min-height: 76px;
+  padding: 13px 6px 11px;
+  font-size: 10px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+.nav-item--side svg {
+  width: 26px;
+  height: 26px;
+}
+.nav-item--side:hover {
+  background: rgba(255, 255, 255, 0.045);
+}
+.nav-item--side.nav-item--active {
+  background: rgba(255, 59, 59, 0.08);
+}
+.nav-item--side:after {
+  left: 0;
+  right: auto;
+  top: 13px;
+  bottom: 13px;
+  width: 2px;
+  height: auto;
+  transform: scaleY(0);
+}
+.nav-item--side.nav-item--active:after {
+  transform: scaleY(1);
+}
+
+/* Light / dark toggle, docked at the bottom of the rail */
+.side-rail-theme {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  transition: all 0.2s var(--ease);
+}
+.side-rail-theme:hover {
+  color: var(--lime);
+  border-color: var(--lime);
+}
+.side-rail-theme svg {
+  width: 20px;
+  height: 20px;
+}
+.side-rail-theme-label {
+  display: none;
+}
+
+/* Tap-anywhere scrim behind the phone drawer */
+.side-rail-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 25;
+  background: rgba(0, 0, 0, 0.55);
+  animation: scrim-in 0.25s var(--ease);
+}
+@keyframes scrim-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Desktop: show the rail and give the shell room for it */
+@media (min-width: 761px) {
+  .side-rail {
+    visibility: visible;
+    transform: none;
+  }
+  .app-shell {
+    padding-left: var(--rail-width);
+  }
+  /* The bar's own padding-inline scales with the viewport (it used to centre
+     the nav links). With the nav gone there is nothing to centre, so pin the
+     brand over the rail and the action set to the right edge instead. */
+  .topbar {
+    padding-left: 30px;
+    padding-right: 28px;
+  }
+}
+
 .top-actions {
   display: flex;
   align-items: center;
@@ -1436,9 +1590,6 @@ html:not(.dark) .gift-card:hover {
   .topbar {
     gap: 22px;
   }
-  .nav-item {
-    padding-inline: 9px;
-  }
   .game-grid {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -1465,32 +1616,65 @@ html:not(.dark) .gift-card:hover {
   .brand-logo-img--lg {
     height: 46px;
   }
-  .main-nav {
-    display: none;
-    position: absolute;
-    top: 68px;
-    left: 0;
-    right: 0;
-    height: auto;
-    flex-direction: column;
+  /* The navigation rail becomes the menu drawer: full height, slides in
+     from the left, and carries the brand + nav + auth set. */
+  .side-rail {
+    top: 0;
+    width: 288px;
+    padding: 16px 14px 22px;
     align-items: stretch;
-    padding: 12px 18px 20px;
     background: rgba(8, 11, 16, 0.98);
+    box-shadow: 26px 0 70px rgba(0, 0, 0, 0.55);
+  }
+  .side-rail-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 14px;
     border-bottom: 1px solid var(--line);
   }
-  .main-nav--open {
-    display: flex;
+  .side-rail-close {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    background: transparent;
+    color: var(--ink);
   }
-  .nav-item {
-    height: 43px;
+  .side-rail-nav {
+    align-items: stretch;
+    gap: 2px;
+    margin-block: 18px 0;
+  }
+  /* Drawer rows: icon beside the label, active edge still on the left */
+  .nav-item--side {
+    flex-direction: row;
     justify-content: flex-start;
-    padding-inline: 14px;
+    gap: 15px;
+    min-height: 54px;
+    padding: 0 14px;
+    font-size: 13px;
+    letter-spacing: 0.08em;
   }
-  .nav-item:after {
-    left: 0;
-    right: auto;
-    bottom: 0;
-    width: 50px;
+  .nav-item--side:after {
+    top: 9px;
+    bottom: 9px;
+  }
+  .side-rail-foot {
+    align-items: stretch;
+    margin-top: auto;
+  }
+  .side-rail-theme {
+    width: 100%;
+    height: 46px;
+    justify-content: flex-start;
+    padding: 0 14px;
+  }
+  .side-rail-theme-label {
+    display: inline;
+    font: 600 11px var(--mono);
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
   }
   .top-actions {
     margin-left: auto;
@@ -2560,7 +2744,7 @@ html:not(.dark) .gift-card:hover {
   }
 
   /* Mobile drawer owns the Search / Log in / Register set */
-  .main-nav--open .mobile-nav-actions {
+  .side-rail--open .mobile-nav-actions {
     display: flex;
   }
   /* ...so hide the topbar duplicates while the drawer is open (one set at a time) */
@@ -3549,12 +3733,10 @@ html:not(.dark) .topbar {
 html:not(.dark) .brand-logo-img {
   filter: drop-shadow(0 1px 1px rgba(26, 20, 23, 0.28));
 }
-html:not(.dark) .top-search-btn,
-html:not(.dark) .top-theme-btn {
+html:not(.dark) .top-search-btn {
   background: rgba(26, 20, 23, 0.045);
 }
-html:not(.dark) .top-search-btn:hover,
-html:not(.dark) .top-theme-btn:hover {
+html:not(.dark) .top-search-btn:hover {
   background: rgba(26, 20, 23, 0.08);
 }
 html:not(.dark) .top-search-kbd {
@@ -3591,28 +3773,30 @@ html:not(.dark) .profile-logout-btn:hover {
 html:not(.dark) .mobile-search-btn {
   background: rgba(26, 20, 23, 0.05);
 }
+/* ---- Navigation rail (light mode) ---- */
+html:not(.dark) .side-rail {
+  background: rgba(255, 255, 255, 0.9);
+}
+html:not(.dark) .nav-item--side:hover {
+  background: rgba(26, 20, 23, 0.05);
+}
+html:not(.dark) .nav-item--side.nav-item--active {
+  background: rgba(214, 31, 43, 0.07);
+}
 @media (max-width: 760px) {
-  html:not(.dark) .main-nav {
+  html:not(.dark) .side-rail {
     background: rgba(255, 255, 255, 0.98);
   }
 }
 
-/* ---- Theme toggle button (both themes) ---- */
-.top-theme-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  flex: none;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--line);
-  color: var(--muted);
-  transition: all 0.2s var(--ease);
+/* ---- Theme toggle button (docked in the navigation rail) ---- */
+/* The rail's own `.side-rail-theme` rule (see the rail block above) carries
+   the shared look; light mode just needs its translucent fills inverted. */
+html:not(.dark) .side-rail-theme {
+  background: rgba(26, 20, 23, 0.045);
 }
-.top-theme-btn:hover {
-  color: var(--lime);
-  border-color: var(--lime);
+html:not(.dark) .side-rail-theme:hover {
+  background: rgba(26, 20, 23, 0.08);
 }
 
 /* ---- Buttons ----
@@ -4627,29 +4811,12 @@ html .catalog-cta .action-button--ghost:hover {
 }
 
 /* ==========================================================================
-   Top bar — centred nav links
-   The five links are the header's focal point, so they sit centred between
-   the brand mark and the action buttons instead of hugging the logo:
-
-     761px – 1309px: the nav's own auto margins centre it in the room left
-       over between the brand and the Search / Log in / Register set. Auto
-       margins can never make neighbours overlap, so this is safe at every
-       width in the band. (The right-hand set is much wider than the small
-       brand mark, so the links sit a little left of the viewport centre —
-       they are centred in the free space, which is what reads as balanced.)
-
-     1310px and up: there is enough slack for the links to be pinned to the
-       true centre of the bar, so the nav is taken out of the flow and centred
-       on the mid-line while the action set keeps the right edge. The gap
-       between the two is never under ~20px down to the threshold, and the
-       long callsign cap below keeps it that way when a user is signed in.
-       (Measured in Chromium: 23px at 1310, 21px from 1368 up.)
-
-   The links are also a little larger: 13px labels (was 11px), 17px icons
-   (was 15px) and roomier item padding. To keep the wider set clear of its
-   neighbours the ⌘K hint is dropped below 1368px, and the narrowest desktop
-   widths tighten the item padding again. Phone layout (≤760px) is untouched:
-   the links live in the drawer there.
+   Top bar — brand left, actions right
+   The five primary links moved out of the bar into the left navigation rail
+   (`.side-rail`), which leaves the bar with just the brand mark and the
+   Search / Log in / Register set. The actions keep the right edge with
+   `margin-left: auto`, so nothing can collide with the brand at any width.
+   The ⌘K hint is dropped below 1368px to keep the set comfortable.
    ========================================================================== */
 @media (max-width: 1367.98px) {
   .top-search-kbd {
@@ -4657,48 +4824,8 @@ html .catalog-cta .action-button--ghost:hover {
   }
 }
 
-@media (min-width: 761px) and (max-width: 1309.98px) {
-  .main-nav {
-    margin-inline: auto;
-  }
-  /* The nav's auto margins already carry this group to the right edge. */
-  .top-actions {
-    margin-left: 0;
-  }
-}
-
-/* Tight desktop band: narrower items keep the links clear of the buttons. */
-@media (min-width: 761px) and (max-width: 950px) {
-  .main-nav {
-    gap: 4px;
-  }
-  .nav-item {
-    gap: 6px;
-    padding-inline: 9px;
-  }
-  .nav-item:after {
-    left: 9px;
-    right: 9px;
-  }
-}
-
-/* Wide screens: pin the nav to the centre of the bar. */
-@media (min-width: 1310px) {
-  .main-nav {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    height: 100%;
-    margin-inline: 0;
-    transform: translateX(-50%);
-  }
-  .top-actions {
-    margin-left: auto;
-  }
-}
-
-/* Long callsigns stay inside the bar so the centred nav can never collide
-   with the profile button — the width the breakpoint above was measured at. */
+/* Long callsigns stay inside the bar so they can never push the action set
+   past the right edge when a user is signed in. */
 .profile-name {
   max-width: 84px;
   overflow: hidden;
